@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Resultados y Conclusiones</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'santoto-orange': '#F5A623',
+            'santoto-dark': '#1A202C',
+            'santoto-grey': '#4A5568',
+            'santoto-light': '#F7FAFC',
+            'estado-blue': '#1F4E79',
+            'estado-green': '#2E7D32'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      background-color: #f1f5f9;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      transition: opacity 0.45s ease-in-out;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 1;
+    }
+
+    .slide-content {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .info-card {
+      background: white;
+      padding: 1.4rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 18px -12px rgba(0, 0, 0, 0.35);
+      border-left: 5px solid #F5A623;
+    }
+
+    .soft-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 18px -12px rgba(0, 0, 0, 0.35);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      background: white;
+      border-radius: 0.8rem;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 0.8rem 0.9rem;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    thead th {
+      background-color: #fdeed9;
+      color: #7c4a03;
+      font-weight: 700;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    .chart-box {
+      position: relative;
+      height: 320px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="bg-santoto-dark shadow-lg fixed top-0 left-0 right-0 z-20">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html">
+        <img
+          src="https://usantotomas.edu.co/hs-fs/hubfs/social-suggested-images/usantotomas.edu.cohs-fshubfsLogo%20Santoto%20-%20SP%20Bogota%20Horizontal%20blanco-2.png?width=188&height=43"
+          alt="Logo Universidad Santo Tomás"
+          class="h-10"
+        />
+      </a>
+
+      <div class="space-x-4">
+        <a href="modelacion.html" class="text-gray-300 hover:text-white transition text-sm font-medium">
+          ← Volver a Modelación
+        </a>
+        <a href="index.html" class="bg-santoto-orange text-white px-4 py-2 rounded-md hover:opacity-80 transition text-sm font-medium">
+          Inicio
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- SLIDE 1 -->
+  <section id="slide-1" class="slide active">
+    <div class="slide-content">
+      <div class="max-w-7xl mx-auto px-8 py-10">
+
+        <p class="text-2xl font-bold text-santoto-orange text-center">RESULTADOS</p>
+
+        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+          Comparación SARIMAX vs Random Forest
+        </h2>
+
+        <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+          Para comparar los modelos, se evaluaron sus predicciones frente a los valores reales del periodo 2024-2025. Las métricas se calcularon sobre la serie en logaritmo, para que ambos modelos quedaran en la misma escala.
+        </p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10 items-center">
+
+          <!-- Tabla -->
+          <div class="soft-card">
+            <h3 class="text-xl font-bold text-santoto-dark mb-4 text-center">
+              Métricas de error
+            </h3>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Métrica</th>
+                  <th>SARIMAX</th>
+                  <th>Random Forest</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>RMSE</td>
+                  <td><strong>0,0935</strong></td>
+                  <td>0,1158</td>
+                </tr>
+                <tr>
+                  <td>MAE</td>
+                  <td><strong>0,0850</strong></td>
+                  <td>0,0930</td>
+                </tr>
+                <tr>
+                  <td>MAPE</td>
+                  <td><strong>0,35%</strong></td>
+                  <td>0,38%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Gráfico -->
+          <div class="soft-card">
+            <h3 class="text-xl font-bold text-santoto-dark mb-4 text-center">
+              Comparación visual de métricas
+            </h3>
+
+            <div class="chart-box">
+              <canvas id="metricasChart"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <p class="text-center text-slate-500 italic mt-5">
+          Nota: menores valores indican mejor desempeño predictivo.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+
+          <div class="info-card">
+            <h3 class="text-xl font-bold text-santoto-dark mb-2">
+              Mejor ajuste en prueba
+            </h3>
+            <p class="text-slate-600 leading-relaxed">
+              El modelo <strong>SARIMAX(2,0,2)(1,1,2)[12]</strong> tuvo menores errores en RMSE, MAE y MAPE. Esto muestra que sus predicciones estuvieron más cerca de los valores reales.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h3 class="text-xl font-bold text-santoto-dark mb-2">
+              Ley de Garantías dentro del modelo
+            </h3>
+            <p class="text-slate-600 leading-relaxed">
+              El SARIMAX permite incluir directamente la <strong>Ley de Garantías</strong> como variable exógena, lo cual es importante para responder la pregunta del proyecto.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h3 class="text-xl font-bold text-santoto-dark mb-2">
+              Resultado frente a Random Forest
+            </h3>
+            <p class="text-slate-600 leading-relaxed">
+              En Random Forest, la variable <strong>Ley_Garantias</strong> tuvo una importancia muy baja, con un <strong>%IncMSE de 0,06%</strong>. El modelo se apoyó más en los rezagos y en el comportamiento histórico.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="mt-8 bg-white rounded-2xl shadow-lg p-5 border-l-4 border-santoto-orange">
+          <p class="text-lg text-slate-700 text-center leading-relaxed">
+            Por estos resultados, el <strong>SARIMAX</strong> se selecciona como modelo principal para la predicción de 2026.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2 -->
+  <section id="slide-2" class="slide">
+    <div class="slide-content">
+      <div class="max-w-7xl mx-auto px-8 py-10">
+
+        <p class="text-2xl font-bold text-santoto-orange text-center">PREDICCIÓN 2026</p>
+
+        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+          Comparación de predicciones para 2026
+        </h2>
+
+        <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+          Después de comparar el desempeño de los modelos en el periodo de prueba 2024-2025, se revisaron sus predicciones para 2026. Esto permite ver si ambos enfoques muestran un comportamiento parecido durante el año electoral y el periodo posterior.
+        </p>
+
+        <div class="mt-9 bg-white rounded-2xl shadow-lg p-5">
+          <img
+            src="prediccion_2026_modelos.png"
+            alt="Comparación de predicciones SARIMAX y Random Forest para 2026"
+            class="w-full rounded-xl object-contain max-h-[470px]"
+          >
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+
+          <div class="info-card">
+            <h3 class="text-xl font-bold text-santoto-dark mb-2">
+              Comportamiento esperado en 2026
+            </h3>
+            <p class="text-slate-600 leading-relaxed">
+              Los dos modelos muestran un comportamiento parecido. En los primeros meses del año se observa una moderación en la producción de primas, especialmente en el periodo cercano a la Ley de Garantías.
+            </p>
+            <p class="text-slate-600 leading-relaxed mt-3">
+              Después, durante el segundo semestre, ambos proyectan una recuperación gradual, con un crecimiento más fuerte hacia el cierre del año.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h3 class="text-xl font-bold text-santoto-dark mb-2">
+              Modelo de referencia
+            </h3>
+            <p class="text-slate-600 leading-relaxed">
+              Aunque las dos proyecciones son similares, el SARIMAX se toma como referencia principal porque fue el modelo que mostró mejor desempeño en el conjunto de prueba.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3 -->
+  <section id="slide-3" class="slide">
+    <div class="slide-content">
+      <div class="max-w-7xl mx-auto px-8 py-10">
+
+        <p class="text-2xl font-bold text-santoto-orange text-center">RESPUESTA FINAL</p>
+
+        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+          Respuesta a la pregunta problema
+        </h2>
+
+        <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+          El proyecto buscó responder dos puntos principales: qué efecto tienen los periodos de Ley de Garantías sobre la producción mensual de primas de Fianzas y qué modelo permite pronosticar mejor el comportamiento de la línea durante 2026.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+              Efecto de la Ley de Garantías
+            </h3>
+
+            <p class="text-slate-600 leading-relaxed">
+              Los meses con Ley de Garantías presentaron un promedio menor de primas, con una diferencia aproximada de <strong>-12,05%</strong> frente a los meses sin Ley.
+            </p>
+
+            <p class="text-slate-600 leading-relaxed mt-3">
+              Al revisar la mediana, la diferencia fue mucho menor, cercana al <strong>-1,4%</strong>, lo que muestra que el comportamiento habitual de la serie no cambia de forma tan marcada.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+              Resultado de las pruebas
+            </h3>
+
+            <p class="text-slate-600 leading-relaxed">
+              Las pruebas estadísticas no mostraron evidencia suficiente para afirmar que las primas sean significativamente diferentes entre los periodos con y sin Ley.
+            </p>
+
+            <p class="text-slate-600 leading-relaxed mt-3">
+              Esto indica que la Ley puede estar asociada con una menor dinámica, pero no explica por sí sola todo el comportamiento de la producción.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+              Modelo seleccionado
+            </h3>
+
+            <p class="text-slate-600 leading-relaxed">
+              El modelo <strong>SARIMAX(2,0,2)(1,1,2)[12]</strong> presentó mejor desempeño que Random Forest en el conjunto de prueba.
+            </p>
+
+            <p class="text-slate-600 leading-relaxed mt-3">
+              Además, permite incorporar la Ley de Garantías directamente dentro del modelo, por lo que se selecciona como modelo principal para la predicción de 2026.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="mt-10 bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+          <p class="text-xl text-slate-700 leading-relaxed text-center">
+            En general, la Ley de Garantías sí muestra una señal sobre la producción de Fianzas, pero su efecto debe analizarse junto con la tendencia, la estacionalidad y el comportamiento histórico de la serie.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 -->
+  <section id="slide-4" class="slide">
+    <div class="slide-content">
+      <div class="max-w-7xl mx-auto px-8 py-10">
+
+        <p class="text-2xl font-bold text-santoto-orange text-center">CONCLUSIONES</p>
+
+        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+          Conclusiones principales
+        </h2>
+
+        <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+          A partir del análisis exploratorio, la comparación de modelos y las predicciones para 2026, se obtuvieron las siguientes conclusiones del proyecto.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+              La Ley muestra una señal, pero no actúa sola
+            </h3>
+
+            <p class="text-slate-600 leading-relaxed">
+              Los periodos de Ley de Garantías pueden estar relacionados con una menor producción promedio de primas.
+            </p>
+
+            <p class="text-slate-600 leading-relaxed mt-3">
+              Aun así, el comportamiento de la línea también depende de la tendencia histórica, la estacionalidad mensual y algunos meses atípicos.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+              SARIMAX representó mejor la serie
+            </h3>
+
+            <p class="text-slate-600 leading-relaxed">
+              El SARIMAX permitió modelar la tendencia, la estacionalidad y la variable de Ley de Garantías dentro de una misma estructura.
+            </p>
+
+            <p class="text-slate-600 leading-relaxed mt-3">
+              Por eso fue más adecuado que Random Forest para responder la pregunta principal del proyecto.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+              Predicción 2026
+            </h3>
+
+            <p class="text-slate-600 leading-relaxed">
+              Las proyecciones muestran una producción más moderada durante parte del primer semestre de 2026, especialmente en los meses cercanos al periodo de Ley de Garantías.
+            </p>
+
+            <p class="text-slate-600 leading-relaxed mt-3">
+              Luego se espera una recuperación gradual en el segundo semestre, con un aumento más fuerte hacia el cierre del año.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+              Utilidad para la compañía
+            </h3>
+
+            <p class="text-slate-600 leading-relaxed">
+              Los resultados pueden apoyar la planeación y el seguimiento comercial de la compañía durante el año electoral.
+            </p>
+
+            <p class="text-slate-600 leading-relaxed mt-3">
+              Esto permite anticipar posibles periodos de menor producción y facilitar la toma de decisiones durante el periodo electoral y postelectoral.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 -->
+  <section id="slide-5" class="slide bg-santoto-dark text-white">
+    <div class="slide-content text-center">
+      <div class="max-w-6xl mx-auto p-8">
+
+        <p class="text-2xl font-bold text-santoto-orange">CONTINUIDAD DEL ESTUDIO</p>
+
+        <h2 class="text-5xl font-extrabold mt-3">
+          ¿Qué se podría hacer después?
+        </h2>
+
+        <p class="text-xl text-slate-300 mt-6 max-w-4xl mx-auto">
+          Este estudio deja una base para seguir analizando cómo los periodos electorales se relacionan con la producción de Fianzas. Una siguiente etapa podría llevar el análisis a un nivel más detallado.
+        </p>
+
+        <div class="mt-10 bg-white/10 rounded-2xl p-6 border-t-4 border-santoto-orange max-w-5xl mx-auto">
+          <p class="text-2xl font-bold text-white leading-relaxed">
+            ¿Qué pasaría si el análisis se realiza por ramo, sucursal o tipo de contrato para identificar qué segmentos de Fianzas son más sensibles a los periodos de Ley de Garantías?
+          </p>
+        </div>
+
+        <div class="mt-10 grid md:grid-cols-3 gap-6 text-left">
+
+          <div class="bg-white/10 p-6 rounded-xl">
+            <h3 class="font-bold text-santoto-orange text-lg">
+              Tipo de elección
+            </h3>
+            <p class="text-slate-300 mt-2">
+              Se podría revisar si el efecto cambia entre elecciones presidenciales y elecciones territoriales.
+            </p>
+          </div>
+
+          <div class="bg-white/10 p-6 rounded-xl">
+            <h3 class="font-bold text-santoto-orange text-lg">
+              Segmentos de Fianzas
+            </h3>
+            <p class="text-slate-300 mt-2">
+              También se puede profundizar por ramo, sucursal o tipo de contrato para identificar dónde se presenta mayor sensibilidad al ciclo electoral.
+            </p>
+          </div>
+
+          <div class="bg-white/10 p-6 rounded-xl">
+            <h3 class="font-bold text-santoto-orange text-lg">
+              Datos reales de 2026
+            </h3>
+            <p class="text-slate-300 mt-2">
+              A medida que avance 2026, se podrán comparar las predicciones con los valores reales y ajustar los modelos para futuros procesos electorales.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="mt-10 bg-white/10 rounded-xl p-5 max-w-4xl mx-auto">
+          <p class="text-slate-200 text-lg">
+            Con más datos, este análisis puede convertirse en una herramienta de seguimiento para anticipar escenarios comerciales en periodos electorales.
+          </p>
+        </div>
+
+        <div class="mt-8">
+          <a href="index.html" class="bg-santoto-orange text-white px-8 py-3 rounded-lg hover:opacity-80 transition text-lg font-semibold">
+            Volver al inicio
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Navegación -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t z-20">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+      <button id="prevBtn" class="bg-santoto-dark text-white px-6 py-2 rounded-lg hover:bg-santoto-grey transition disabled:opacity-50">
+        Anterior
+      </button>
+
+      <div id="slide-counter" class="text-sm text-slate-600 font-semibold"></div>
+
+      <button id="nextBtn" class="bg-santoto-orange text-white px-6 py-2 rounded-lg hover:opacity-80 transition">
+        Siguiente
+      </button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let currentSlide = 1;
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      const nextBtn = document.getElementById('nextBtn');
+      const prevBtn = document.getElementById('prevBtn');
+      const slideCounter = document.getElementById('slide-counter');
+
+      function updateSlides() {
+        slides.forEach((slide, index) => {
+          slide.classList.toggle('active', index + 1 === currentSlide);
+        });
+
+        slideCounter.textContent = `Diapositiva ${currentSlide} de ${totalSlides}`;
+        prevBtn.disabled = currentSlide === 1;
+        nextBtn.disabled = currentSlide === totalSlides;
+      }
+
+      nextBtn.addEventListener('click', () => {
+        if (currentSlide < totalSlides) {
+          currentSlide++;
+          updateSlides();
+        }
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (currentSlide > 1) {
+          currentSlide--;
+          updateSlides();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextBtn.click();
+        if (e.key === 'ArrowLeft') prevBtn.click();
+      });
+
+      const ctx = document.getElementById('metricasChart')?.getContext('2d');
+
+      if (ctx) {
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['RMSE', 'MAE', 'MAPE'],
+            datasets: [
+              {
+                label: 'SARIMAX',
+                data: [0.0935, 0.0850, 0.35],
+                backgroundColor: '#1F4E79',
+                borderRadius: 8
+              },
+              {
+                label: 'Random Forest',
+                data: [0.1158, 0.0930, 0.38],
+                backgroundColor: '#2E7D32',
+                borderRadius: 8
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Valor de la métrica'
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }
+        });
+      }
+
+      updateSlides();
+    });
+  </script>
+
+</body>
+</html>

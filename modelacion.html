@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modelación - SARIMAX y Random Forest</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'santoto-orange': '#F5A623',
+            'santoto-dark': '#1A202C',
+            'santoto-grey': '#4A5568',
+            'estado-blue': '#0B3D91'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      background-color: #f1f5f9;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0;
+      transition: opacity 0.45s ease-in-out;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 1;
+    }
+
+    .slide-content {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .info-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.9rem;
+      box-shadow: 0 10px 18px -12px rgba(0, 0, 0, 0.35);
+      border-left: 5px solid #F5A623;
+    }
+
+    .soft-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 18px -12px rgba(0, 0, 0, 0.35);
+    }
+
+    .note {
+      font-size: 0.92rem;
+      color: #64748b;
+      margin-top: 1.1rem;
+      font-style: italic;
+    }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 360px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      background: white;
+      border-radius: 0.8rem;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    thead th {
+      background-color: #fdeed9;
+      color: #7c4a03;
+      font-weight: 700;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background-color: #fff7ed;
+      color: #9a3412;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="bg-santoto-dark shadow-lg fixed top-0 left-0 right-0 z-20">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html">
+        <img
+          src="https://usantotomas.edu.co/hs-fs/hubfs/social-suggested-images/usantotomas.edu.cohs-fshubfsLogo%20Santoto%20-%20SP%20Bogota%20Horizontal%20blanco-2.png?width=188&height=43"
+          alt="Logo Universidad Santo Tomás"
+          class="h-10"
+        />
+      </a>
+
+      <div class="space-x-4">
+        <a href="index.html" class="text-gray-300 hover:text-white transition text-sm font-medium">Inicio</a>
+        <a href="analisis_exploratorio.html" class="text-gray-300 hover:text-white transition text-sm font-medium">← Análisis</a>
+        <a href="resultados_conclusiones.html" class="bg-santoto-orange text-white px-4 py-2 rounded-md hover:opacity-80 transition text-sm font-medium">
+          Ir a Resultados →
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- SLIDE 1 -->
+  <section id="slide-1" class="slide active">
+    <div class="slide-content text-center">
+      <div class="max-w-5xl mx-auto p-8">
+        <p class="text-2xl font-bold text-santoto-orange">MÓDULO 2</p>
+        <h1 class="text-5xl font-extrabold text-santoto-dark mt-3">
+          Modelación SARIMAX y Random Forest
+        </h1>
+        <p class="text-xl text-slate-600 mt-6 max-w-4xl mx-auto">
+          En esta parte se construyen y comparan dos enfoques predictivos: un modelo de series de tiempo SARIMAX y un modelo de machine learning Random Forest.
+        </p>
+
+        <div class="mt-10 grid md:grid-cols-3 gap-6 text-left">
+          <div class="info-card">
+            <h3 class="font-bold text-santoto-dark text-lg">SARIMAX 2007-2025</h3>
+            <p class="text-slate-600 mt-2">Primer escenario con toda la serie histórica, incluyendo la variable de Ley de Garantías.</p>
+          </div>
+          <div class="info-card">
+            <h3 class="font-bold text-santoto-dark text-lg">SARIMAX 2010-2025</h3>
+            <p class="text-slate-600 mt-2">Segundo escenario sin el periodo más inestable de la serie, para mejorar la estabilidad del modelo.</p>
+          </div>
+          <div class="info-card">
+            <h3 class="font-bold text-santoto-dark text-lg">Random Forest</h3>
+            <p class="text-slate-600 mt-2">Modelo alternativo basado en variables rezagadas y aprendizaje automático.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- SLIDE 2 -->
+    <section id="slide-2" class="slide">
+    <div class="slide-content">
+        <div class="max-w-7xl mx-auto px-8 py-10">
+
+        <p class="text-2xl font-bold text-santoto-orange text-center">ESCENARIO 1</p>
+
+        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+            SARIMAX 2007-2025
+        </h2>
+
+        <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+            Primero se ajustó un modelo SARIMAX con toda la serie histórica, usando estacionalidad de 12 meses e incluyendo la Ley de Garantías como variable exógena.
+        </p>
+
+        <!-- Parte superior -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+            <h3 class="text-xl font-bold text-santoto-dark mb-3">
+                Selección del modelo
+            </h3>
+            <p class="text-slate-600 leading-relaxed">
+                Se probaron varios modelos SARIMAX teniendo en cuenta la estacionalidad mensual, los gráficos FAC/FACP y criterios como AIC, BIC, RMSE y MAPE.
+            </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+            <h3 class="text-xl font-bold text-santoto-dark mb-3">
+                Validación de supuestos
+            </h3>
+            <p class="text-slate-600 leading-relaxed">
+                Los residuos estaban centrados cerca de cero, pero mostraban variabilidad no constante, autocorrelación, falta de normalidad y valores extremos.
+            </p>
+            </div>
+
+        </div>
+
+        <!-- Flujo ARCH/GARCH -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mt-8 items-center">
+
+            <!-- Residuos -->
+            <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-5">
+            <h3 class="text-xl font-bold text-santoto-dark mb-4 text-center">
+                Supuesto 2: varianza constante
+            </h3>
+
+            <img 
+                src="residuos_sarimax_2007.png" 
+                alt="Residuos estandarizados del SARIMAX 2007-2025"
+                class="w-full rounded-xl shadow-md object-contain max-h-[320px]"
+            >
+
+            <p class="text-sm text-slate-500 text-center mt-3">
+                Al inicio de la serie se observan movimientos fuertes y algunos valores extremos.
+            </p>
+            </div>
+
+            <!-- Flecha -->
+            <div class="hidden lg:flex justify-center items-center">
+            <div class="text-5xl font-bold text-santoto-orange">
+                →
+            </div>
+            </div>
+
+            <!-- ARCH + GARCH -->
+            <div class="lg:col-span-2 space-y-5">
+
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-l-4 border-santoto-orange">
+                <h3 class="text-xl font-bold text-santoto-dark mb-3">
+                Prueba ARCH LM
+                </h3>
+                <p class="text-slate-600 leading-relaxed">
+                La prueba ARCH LM obtuvo un <strong>p-value &lt; 2,2e-16</strong>, por lo que se concluye que la varianza de los residuos no era constante.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-l-4 border-santoto-orange">
+                <h3 class="text-xl font-bold text-santoto-dark mb-3">
+                Ajuste GARCH(1,1)
+                </h3>
+                <p class="text-slate-600 leading-relaxed">
+                Se ajustó GARCH sobre los errores del SARIMAX para revisar si el problema estaba relacionado con la volatilidad de los residuos.
+                </p>
+            </div>
+
+            </div>
+
+        </div>
+
+        <!-- Decisión -->
+        <div class="mt-8 bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <p class="text-lg text-slate-700 leading-relaxed text-center">
+            El ajuste GARCH ayudó a revisar la volatilidad, pero no mejoró de forma clara la predicción central. Por eso, este primer escenario se tomó como diagnóstico y se construyó un segundo escenario desde 2010, con una serie más estable.
+            </p>
+        </div>
+
+        </div>
+    </div>
+    </section>
+
+    <!-- SLIDE 3 -->
+    <section id="slide-3" class="slide">
+    <div class="slide-content">
+        <div class="max-w-7xl mx-auto px-8 py-10">
+
+        <p class="text-2xl font-bold text-santoto-orange text-center">ESCENARIO 2</p>
+
+        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+            SARIMAX 2010-2025
+        </h2>
+
+        <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+            Se construyó un segundo escenario utilizando la información desde enero de 2010 hasta diciembre de 2025,
+            con el fin de trabajar con una serie más estable para la selección del modelo final.
+        </p>
+
+        <!-- Serie 2010-2025 + lectura -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-8 items-center">
+
+            <!-- Imagen serie 2010 -->
+            <div class="lg:col-span-3 flex items-center justify-center">
+            <img 
+                src="serie_2010_2025.png" 
+                alt="Serie logarítmica de primas 2010-2025"
+                class="w-full max-w-4xl rounded-2xl shadow-xl object-contain bg-white p-2"
+            >
+            </div>
+
+            <!-- Lectura de la serie -->
+            <div class="lg:col-span-2 space-y-5">
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+                <h3 class="text-xl font-bold text-santoto-dark mb-3">
+                Lectura de la serie
+                </h3>
+                <p class="text-slate-600 leading-relaxed">
+                Desde 2010, la serie muestra un crecimiento progresivo de las primas de Fianzas y algunos picos que se repiten en ciertos meses del año.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+                <h3 class="text-xl font-bold text-santoto-dark mb-3">
+                ¿Por qué SARIMAX?
+                </h3>
+                <p class="text-slate-600 leading-relaxed">
+                Este comportamiento confirma que existe una dinámica temporal con tendencia y estacionalidad, por lo que se continúa con un modelo SARIMAX.
+                </p>
+            </div>
+
+            </div>
+
+        </div>
+
+        <!-- Exploración inicial -->
+        <div class="mt-10">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-5">
+            Exploración de la serie y pruebas iniciales
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-santoto-orange">
+                <h4 class="text-lg font-bold text-santoto-dark mb-3">
+                Estacionariedad
+                </h4>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                Se aplicaron las pruebas de <strong>Dickey-Fuller</strong> y <strong>Phillips-Perron</strong> para revisar la presencia de raíz unitaria en la serie.
+                </p>
+                <p class="text-slate-600 text-sm leading-relaxed mt-3">
+                Phillips-Perron presentó un <strong>p-value = 0,0100</strong>. Para Dickey-Fuller, reemplaza aquí el valor exacto obtenido en R.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-santoto-orange">
+                <h4 class="text-lg font-bold text-santoto-dark mb-3">
+                Diferenciación
+                </h4>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                La revisión de diferencias indicó trabajar con una diferencia ordinaria <strong>d = 1</strong> y sin diferencia estacional <strong>D = 0</strong>.
+                </p>
+                <p class="text-slate-600 text-sm leading-relaxed mt-3">
+                Después de aplicar la diferencia, la serie se observó más estable visualmente.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-santoto-orange">
+                <h4 class="text-lg font-bold text-santoto-dark mb-3">
+                Selección del modelo
+                </h4>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                Se probaron varios modelos SARIMAX teniendo en cuenta los gráficos FAC/FACP, el criterio de mínima varianza y la selección del modelo final se basó en los criterios AIC, BIC, RMSE y MAPE, verificando además el cumplimiento de los supuestos del modelo.
+                </p>
+            </div>
+
+            </div>
+        </div>
+
+        <!-- Propuesta de modelos -->
+        <div class="mt-10">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-5">
+            Propuesta de modelos SARIMAX
+            </h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- Tabla modelos propuestos -->
+            <div class="bg-white rounded-2xl shadow-lg p-5">
+                <h4 class="text-lg font-bold text-santoto-dark mb-4">
+                Modelos evaluados
+                </h4>
+
+                <table>
+                <thead>
+                    <tr>
+                    <th>Modelo</th>
+                    <th>Especificación</th>
+                    <th>Variable externa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td>Modelo 1</td>
+                    <td>SARIMAX(1,1,1)(0,1,1)[12]</td>
+                    <td>Ley de Garantías</td>
+                    </tr>
+                    <tr>
+                    <td>Modelo 2</td>
+                    <td>SARIMAX(1,0,1)(1,1,1)[12]</td>
+                    <td>Ley de Garantías</td>
+                    </tr>
+                    <tr>
+                    <td>Modelo 3</td>
+                    <td>SARIMAX(2,0,2)(1,1,2)[12]</td>
+                    <td>Ley de Garantías</td>
+                    </tr>
+                    <tr>
+                    <td>Modelo 4 (auto.arima)</td>
+                    <td>SARIMAX(0,1,1)(0,1,1)[12]</td>
+                    <td>Ley de Garantías</td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+
+            <!-- Tabla métricas propuestas -->
+            <div class="bg-white rounded-2xl shadow-lg p-5">
+                <h4 class="text-lg font-bold text-santoto-dark mb-4">
+                Criterios de información y métricas
+                </h4>
+
+                <table>
+                <thead>
+                    <tr>
+                    <th>Modelo</th>
+                    <th>AIC</th>
+                    <th>BIC</th>
+                    <th>RMSE</th>
+                    <th>MAPE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td>Modelo 1</td>
+                    <td>-191,0567</td>
+                    <td>-175,8396</td>
+                    <td>0,1169</td>
+                    <td>0,3720</td>
+                    </tr>
+                    <tr>
+                    <td>Modelo 2</td>
+                    <td>-190,7215</td>
+                    <td>-172,4224</td>
+                    <td>0,1168</td>
+                    <td>0,3769</td>
+                    </tr>
+                    <tr class="bg-orange-50">
+                    <td><strong>Modelo 3</strong></td>
+                    <td><strong>-197,1390</strong></td>
+                    <td>-169,6903</td>
+                    <td><strong>0,1094</strong></td>
+                    <td><strong>0,3570</strong></td>
+                    </tr>
+                    <tr>
+                    <td>Modelo 4 (auto.arima)</td>
+                    <td>-193,0178</td>
+                    <td><strong>-180,8441</strong></td>
+                    <td>0,1169</td>
+                    <td>0,3713</td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+
+            </div>
+        </div>
+
+        <!-- Modelos seleccionados en test -->
+        <div class="mt-8 bg-white rounded-2xl shadow-lg p-5 border-l-4 border-santoto-orange">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+
+            <div>
+                <h3 class="text-xl font-bold text-santoto-dark mb-3">
+                Validación en el conjunto de prueba
+                </h3>
+                <p class="text-slate-600 leading-relaxed">
+                Después de comparar los modelos candidatos, se revisaron los dos modelos con mejor desempeño en el conjunto de prueba.
+                El <strong>Modelo 3</strong> presentó mejores métricas y se seleccionó como modelo final para el escenario SARIMAX.
+                </p>
+            </div>
+
+            <div>
+                <table>
+                <thead>
+                    <tr>
+                    <th>Modelo</th>
+                    <th>RMSE</th>
+                    <th>MAE</th>
+                    <th>MAPE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-orange-50">
+                    <td><strong>Modelo 3</strong></td>
+                    <td><strong>0,0935</strong></td>
+                    <td><strong>0,0850</strong></td>
+                    <td><strong>0,3471</strong></td>
+                    </tr>
+                    <tr>
+                    <td>Modelo 4</td>
+                    <td>0,1698</td>
+                    <td>0,1475</td>
+                    <td>0,6025</td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+
+            </div>
+        </div>
+
+        </div>
+    </div>
+    </section>
+
+    <!-- SLIDE 4 -->
+    <section id="slide-4" class="slide">
+    <div class="slide-content">
+        <div class="max-w-7xl mx-auto px-8 py-10">
+
+        <p class="text-2xl font-bold text-santoto-orange text-center">VALIDACIÓN DEL MODELO</p>
+
+        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+            Supuestos y pronóstico del SARIMAX final
+        </h2>
+
+        <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+            Después de seleccionar el Modelo 3, se revisaron los supuestos sobre los residuos y se evaluó su desempeño en el conjunto de prueba 2024-2025.
+        </p>
+
+        <!-- Modelo seleccionado -->
+        <div class="mt-7 bg-white rounded-2xl shadow-lg p-5 border-l-4 border-santoto-orange text-center">
+            <p class="text-lg text-slate-700">
+            <strong>Modelo seleccionado:</strong> SARIMAX(2,0,2)(1,1,2)[12]
+            <span class="text-slate-500"> | </span>
+            <strong>Variable exógena:</strong> Ley de Garantías
+            </p>
+        </div>
+
+        <!-- Tarjetas de supuestos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-7">
+
+            <!-- Supuesto 1 -->
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-green-500">
+            <div class="flex justify-between items-start mb-3">
+                <h3 class="text-lg font-bold text-santoto-dark">1. Media de residuos</h3>
+                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Cumple</span>
+            </div>
+
+            <p class="text-sm text-slate-600 mb-1">
+                <strong>H₀:</strong> La media de los residuos es igual a cero.
+            </p>
+            <p class="text-sm text-slate-600 mb-3">
+                <strong>H₁:</strong> La media de los residuos es diferente de cero.
+            </p>
+
+            <div class="bg-slate-50 rounded-xl p-3 text-sm text-slate-700">
+                <p><strong>Prueba:</strong> t.test</p>
+                <p><strong>p-value:</strong> 0,1384</p>
+                <p><strong>Decisión:</strong> No se rechaza H₀.</p>
+            </div>
+            </div>
+
+            <!-- Supuesto 2 -->
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-green-500">
+            <div class="flex justify-between items-start mb-3">
+                <h3 class="text-lg font-bold text-santoto-dark">2. Varianza constante</h3>
+                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Cumple</span>
+            </div>
+
+            <p class="text-sm text-slate-600 mb-1">
+                <strong>H₀:</strong> No existen efectos ARCH en los residuos.
+            </p>
+            <p class="text-sm text-slate-600 mb-3">
+                <strong>H₁:</strong> Existen efectos ARCH en los residuos.
+            </p>
+
+            <div class="bg-slate-50 rounded-xl p-3 text-sm text-slate-700">
+                <p><strong>Prueba:</strong> ARCH LM</p>
+                <p><strong>p-value:</strong> 0,2875</p>
+                <p><strong>Decisión:</strong> No se rechaza H₀.</p>
+            </div>
+            </div>
+
+            <!-- Supuesto 3 -->
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-red-500">
+            <div class="flex justify-between items-start mb-3">
+                <h3 class="text-lg font-bold text-santoto-dark">3. No autocorrelación</h3>
+                <span class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full">No cumple</span>
+            </div>
+
+            <p class="text-sm text-slate-600 mb-1">
+                <strong>H₀:</strong> Los residuos no presentan autocorrelación.
+            </p>
+            <p class="text-sm text-slate-600 mb-3">
+                <strong>H₁:</strong> Los residuos presentan autocorrelación.
+            </p>
+
+            <div class="bg-slate-50 rounded-xl p-3 text-sm text-slate-700">
+                <p><strong>Prueba:</strong> Ljung-Box</p>
+                <p><strong>p-value:</strong> 0,0377 y 0,0355</p>
+                <p><strong>Decisión:</strong> Se rechaza H₀.</p>
+            </div>
+            </div>
+
+            <!-- Supuesto 4 -->
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-green-500">
+            <div class="flex justify-between items-start mb-3">
+                <h3 class="text-lg font-bold text-santoto-dark">4. Normalidad</h3>
+                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Cumple</span>
+            </div>
+
+            <p class="text-sm text-slate-600 mb-1">
+                <strong>H₀:</strong> Los residuos siguen una distribución normal.
+            </p>
+            <p class="text-sm text-slate-600 mb-3">
+                <strong>H₁:</strong> Los residuos no siguen una distribución normal.
+            </p>
+
+            <div class="bg-slate-50 rounded-xl p-3 text-sm text-slate-700">
+                <p><strong>Prueba:</strong> Shapiro-Wilk</p>
+                <p><strong>p-value:</strong> 0,1564</p>
+                <p><strong>Decisión:</strong> No se rechaza H₀.</p>
+            </div>
+            </div>
+
+            <!-- Supuesto 5 -->
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-yellow-500">
+            <div class="flex justify-between items-start mb-3">
+                <h3 class="text-lg font-bold text-santoto-dark">5. Valores extremos</h3>
+                <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full">Aceptable</span>
+            </div>
+
+            <p class="text-sm text-slate-600 mb-2">
+                <strong>Revisión:</strong> residuos estandarizados con bandas de -3 y 3.
+            </p>
+
+            <div class="bg-slate-50 rounded-xl p-3 text-sm text-slate-700">
+                <p><strong>Resultado:</strong> un punto supera ligeramente el límite superior.</p>
+                <p><strong>Conclusión:</strong> no hay presencia fuerte ni repetida de valores extremos.</p>
+            </div>
+            </div>
+
+            <!-- Supuesto 6 -->
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-green-500">
+            <div class="flex justify-between items-start mb-3">
+                <h3 class="text-lg font-bold text-santoto-dark">6. Ley vs residuos</h3>
+                <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Cumple</span>
+            </div>
+
+            <p class="text-sm text-slate-600 mb-1">
+                <strong>H₀:</strong> No existe correlación entre Ley de Garantías y residuos.
+            </p>
+            <p class="text-sm text-slate-600 mb-3">
+                <strong>H₁:</strong> Existe correlación entre Ley de Garantías y residuos.
+            </p>
+
+            <div class="bg-slate-50 rounded-xl p-3 text-sm text-slate-700">
+                <p><strong>Prueba:</strong> Pearson</p>
+                <p><strong>p-value:</strong> 0,256</p>
+                <p><strong>Decisión:</strong> No se rechaza H₀.</p>
+            </div>
+            </div>
+
+        </div>
+
+        <!-- Pronóstico 2024-2025 -->
+        <div class="mt-8 grid grid-cols-1 lg:grid-cols-5 gap-7 items-center">
+
+            <!-- Imagen pronóstico -->
+            <div class="lg:col-span-3 bg-white rounded-2xl shadow-lg p-5">
+            <h3 class="text-xl font-bold text-santoto-dark mb-4 text-center">
+                Pronóstico 2024-2025
+            </h3>
+
+            <img 
+                src="pronostico_2024_2025.png" 
+                alt="Pronóstico 2024-2025 SARIMAX"
+                class="w-full rounded-xl shadow-md object-contain max-h-[360px]"
+            >
+            </div>
+
+            <!-- Interpretación -->
+            <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-xl font-bold text-santoto-dark mb-3">
+                Lectura del conjunto de prueba
+            </h3>
+
+            <p class="text-slate-600 leading-relaxed">
+                El modelo SARIMAX aplicado a la serie de producción de Fianzas presenta un buen desempeño predictivo en el conjunto de prueba, ya que el pronóstico sigue de cerca el comportamiento observado durante 2024-2025.
+            </p>
+
+            <p class="text-slate-600 leading-relaxed mt-3">
+                Aunque no cumple completamente el supuesto de ausencia de autocorrelación en los residuos, el modelo mejora frente al primer escenario y representa de forma más adecuada la dinámica reciente de la serie.
+            </p>
+            </div>
+
+        </div>
+
+        </div>
+    </div>
+    </section>
+
+<!-- SLIDE 5 -->
+<section id="slide-5" class="slide">
+  <div class="slide-content">
+    <div class="max-w-7xl mx-auto px-8 py-10">
+
+      <p class="text-2xl font-bold text-santoto-orange text-center">MACHINE LEARNING</p>
+
+      <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+        Modelo Random Forest
+      </h2>
+
+      <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+        Como complemento al modelo SARIMAX, se implementó un Random Forest para series de tiempo. Para que el modelo pudiera usar información del pasado, se construyeron variables de rezago a partir de la serie de primas.
+      </p>
+
+      <!-- Cuadros principales -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+          <h3 class="text-xl font-bold text-santoto-dark mb-3">
+            ¿Por qué usar rezagos?
+          </h3>
+          <p class="text-slate-600 leading-relaxed">
+            Random Forest no reconoce por sí solo el orden de los meses. Por eso se agregaron rezagos, que le muestran al modelo qué pasó en meses anteriores y en el mismo mes de años pasados.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+          <h3 class="text-xl font-bold text-santoto-dark mb-3">
+            Variables del modelo
+          </h3>
+          <p class="text-slate-600 leading-relaxed">
+            El modelo se construyó con <strong>año</strong>, <strong>mes</strong>, <strong>Ley de Garantías</strong> y rezagos de la serie: lag1, lag2, lag3, lag12 y lag24.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+          <h3 class="text-xl font-bold text-santoto-dark mb-3">
+            Periodo usado
+          </h3>
+          <p class="text-slate-600 leading-relaxed">
+            Como <strong>lag24</strong> necesita conocer el valor del mismo mes de hace dos años, se pierden las primeras 24 observaciones. Por eso, el modelo empieza desde <strong>enero de 2012</strong>.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Variables + parámetros + importancia -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-7 mt-8 items-start">
+
+        <!-- Tabla de variables -->
+        <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-5">
+          <h3 class="text-xl font-bold text-santoto-dark mb-4">
+            Variables predictoras
+          </h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Variable</th>
+                <th>Descripción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Anio</td>
+                <td>Año de la observación</td>
+              </tr>
+              <tr>
+                <td>Mes</td>
+                <td>Mes de la observación</td>
+              </tr>
+              <tr>
+                <td>Ley_Garantias</td>
+                <td>Dummy de Ley de Garantías</td>
+              </tr>
+              <tr>
+                <td>lag1</td>
+                <td>Prima del mes anterior</td>
+              </tr>
+              <tr>
+                <td>lag2</td>
+                <td>Prima de hace 2 meses</td>
+              </tr>
+              <tr>
+                <td>lag3</td>
+                <td>Prima de hace 3 meses</td>
+              </tr>
+              <tr>
+                <td>lag12</td>
+                <td>Mismo mes del año anterior</td>
+              </tr>
+              <tr>
+                <td>lag24</td>
+                <td>Mismo mes hace 2 años</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Lado derecho -->
+        <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-xl font-bold text-santoto-dark mb-4">
+              Parámetros del modelo
+            </h3>
+
+            <ul class="space-y-3 text-slate-600">
+              <li><strong>Tipo:</strong> Random Forest de regresión.</li>
+              <li><strong>Número de árboles:</strong> 700.</li>
+              <li><strong>Variables por división:</strong> 4.</li>
+              <li><strong>Tamaño mínimo de nodo:</strong> 3.</li>
+              <li><strong>Variable respuesta:</strong> Log(Imp Prima).</li>
+            </ul>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-xl font-bold text-santoto-dark mb-4">
+              División de la muestra
+            </h3>
+
+            <div class="grid grid-cols-1 gap-4">
+              <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-santoto-orange font-bold">Entrenamiento</p>
+                <p class="text-slate-600 mt-1">2012-2023</p>
+                <p class="text-slate-500 text-sm">144 observaciones</p>
+              </div>
+
+              <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-santoto-orange font-bold">Prueba</p>
+                <p class="text-slate-600 mt-1">2024-2025</p>
+                <p class="text-slate-500 text-sm">24 observaciones</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="md:col-span-2 bg-white rounded-2xl shadow-lg p-5">
+            <h3 class="text-xl font-bold text-santoto-dark mb-4 text-center">
+              Importancia de variables
+            </h3>
+
+            <img 
+              src="importancia_rf.png" 
+              alt="Importancia de variables Random Forest"
+              class="w-full rounded-xl shadow-md object-contain max-h-[350px]"
+            >
+
+            <div class="mt-5 bg-slate-50 rounded-xl p-4 border-l-4 border-santoto-orange">
+              <p class="text-slate-600 leading-relaxed">
+                La variable más importante fue <strong>lag12</strong>, lo que muestra que el valor del mismo mes del año anterior tiene mucho peso en la predicción. En cambio, <strong>Ley_Garantias</strong> tuvo una importancia muy baja dentro de este modelo.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6 -->
+<section id="slide-6" class="slide">
+  <div class="slide-content">
+    <div class="max-w-7xl mx-auto px-8 py-10">
+
+      <p class="text-2xl font-bold text-santoto-orange text-center">RESULTADOS DEL MODELO</p>
+
+      <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+        Random Forest en el conjunto de prueba
+      </h2>
+
+      <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+        El modelo se evaluó con los datos de 2024 y 2025, comparando las primas reales frente a las predicciones generadas por Random Forest.
+      </p>
+
+      <!-- Métricas -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mt-8">
+
+        <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-santoto-orange text-center">
+          <h3 class="text-lg font-bold text-santoto-dark mb-2">ME</h3>
+          <p class="text-3xl font-extrabold text-santoto-orange">-0,0271</p>
+          <p class="text-sm text-slate-500 mt-2">Error medio</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-santoto-orange text-center">
+          <h3 class="text-lg font-bold text-santoto-dark mb-2">RMSE</h3>
+          <p class="text-3xl font-extrabold text-santoto-orange">0,1158</p>
+          <p class="text-sm text-slate-500 mt-2">Error cuadrático medio</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-santoto-orange text-center">
+          <h3 class="text-lg font-bold text-santoto-dark mb-2">MAE</h3>
+          <p class="text-3xl font-extrabold text-santoto-orange">0,0930</p>
+          <p class="text-sm text-slate-500 mt-2">Error absoluto medio</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-santoto-orange text-center">
+          <h3 class="text-lg font-bold text-santoto-dark mb-2">MAPE</h3>
+          <p class="text-3xl font-extrabold text-santoto-orange">0,3783%</p>
+          <p class="text-sm text-slate-500 mt-2">Error porcentual</p>
+        </div>
+
+      </div>
+
+      <!-- Gráfica + explicación -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-7 mt-8 items-center">
+
+        <!-- Gráfica RF -->
+        <div class="lg:col-span-3 bg-white rounded-2xl shadow-lg p-5">
+          <h3 class="text-xl font-bold text-santoto-dark mb-4 text-center">
+            Primas reales vs predicción Random Forest
+          </h3>
+
+          <img 
+            src="pronostico_rf.png" 
+            alt="Predicción Random Forest 2024-2025"
+            class="w-full rounded-xl shadow-md object-contain max-h-[390px]"
+          >
+        </div>
+
+        <!-- Explicación derecha -->
+        <div class="lg:col-span-2 space-y-5">
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-xl font-bold text-santoto-dark mb-3">
+              Comportamiento general
+            </h3>
+            <p class="text-slate-600 leading-relaxed">
+              El modelo logra seguir la tendencia general de la serie durante 2024 y 2025. Sus predicciones se mantienen cerca del comportamiento real en varios meses.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-xl font-bold text-santoto-dark mb-3">
+              Meses con picos altos
+            </h3>
+            <p class="text-slate-600 leading-relaxed">
+              El modelo se acerca a algunos aumentos, como diciembre de 2024 y diciembre de 2025, pero no alcanza completamente los valores más altos observados.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-xl font-bold text-santoto-dark mb-3">
+              Resultado principal
+            </h3>
+            <p class="text-slate-600 leading-relaxed">
+              Random Forest tiene un desempeño razonable, aunque tiende a suavizar los picos porque combina el resultado de muchos árboles de decisión.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Cierre -->
+      <div class="mt-8 bg-white rounded-2xl shadow-lg p-5 border-l-4 border-santoto-orange">
+        <p class="text-lg text-slate-700 leading-relaxed text-center">
+          En este modelo, la predicción depende principalmente de los rezagos de la serie. La Ley de Garantías no aparece como una variable importante dentro del Random Forest, por lo que su efecto se observa mejor desde el modelo SARIMAX.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7 -->
+<section id="slide-7" class="slide bg-santoto-dark text-white">
+  <div class="slide-content text-center">
+    <div class="max-w-5xl mx-auto p-8">
+
+      <p class="text-2xl font-bold text-santoto-orange">CIERRE DEL MÓDULO</p>
+
+      <h2 class="text-5xl font-extrabold mt-3">
+        ¿Qué se logró con la modelación?
+      </h2>
+
+      <p class="text-xl text-slate-300 mt-6 max-w-4xl mx-auto">
+        Se construyeron y evaluaron dos enfoques predictivos para representar el comportamiento mensual de las primas de Fianzas: un modelo SARIMAX y un modelo Random Forest.
+      </p>
+
+      <div class="mt-10 grid md:grid-cols-3 gap-6 text-left">
+
+        <div class="bg-white/10 p-6 rounded-xl">
+          <h3 class="font-bold text-santoto-orange text-lg">SARIMAX</h3>
+          <p class="text-slate-300 mt-2">
+            Se trabajaron dos escenarios. El primero sirvió como diagnóstico y el segundo permitió seleccionar el modelo final con una serie más estable.
+          </p>
+        </div>
+
+        <div class="bg-white/10 p-6 rounded-xl">
+          <h3 class="font-bold text-santoto-orange text-lg">Validación</h3>
+          <p class="text-slate-300 mt-2">
+            Se revisaron los supuestos del modelo final y se evaluó su desempeño en el conjunto de prueba 2024-2025.
+          </p>
+        </div>
+
+        <div class="bg-white/10 p-6 rounded-xl">
+          <h3 class="font-bold text-santoto-orange text-lg">Random Forest</h3>
+          <p class="text-slate-300 mt-2">
+            Se construyó como complemento usando variables de calendario, Ley de Garantías y rezagos de la serie.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="mt-10 bg-white/10 rounded-xl p-5 max-w-4xl mx-auto">
+        <p class="text-slate-200 text-lg">
+          Con estos dos modelos ya se cuenta con la base para comparar resultados y definir cuál tiene mejor desempeño predictivo.
+        </p>
+      </div>
+
+      <div class="mt-8">
+        <a href="resultados_conclusiones.html" class="bg-santoto-orange text-white px-8 py-3 rounded-lg hover:opacity-80 transition text-lg font-semibold">
+          Continuar a Resultados →
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+  <!-- Navegación -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t z-20">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+      <button id="prevBtn" class="bg-santoto-dark text-white px-6 py-2 rounded-lg hover:bg-santoto-grey transition disabled:opacity-50">
+        Anterior
+      </button>
+      <div id="slide-counter" class="text-sm text-slate-600 font-semibold"></div>
+      <button id="nextBtn" class="bg-santoto-orange text-white px-6 py-2 rounded-lg hover:opacity-80 transition">
+        Siguiente
+      </button>
+    </div>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#f3f4f6',
+        primaryTextColor: '#1A202C',
+        lineColor: '#4A5568',
+        fontSize: '16px'
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      let currentSlide = 1;
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      const nextBtn = document.getElementById('nextBtn');
+      const prevBtn = document.getElementById('prevBtn');
+      const slideCounter = document.getElementById('slide-counter');
+
+      function updateSlides() {
+        slides.forEach((slide, index) => {
+          slide.classList.toggle('active', index + 1 === currentSlide);
+        });
+
+        slideCounter.textContent = `Diapositiva ${currentSlide} de ${totalSlides}`;
+        prevBtn.disabled = currentSlide === 1;
+        nextBtn.disabled = currentSlide === totalSlides;
+      }
+
+      nextBtn.addEventListener('click', () => {
+        if (currentSlide < totalSlides) {
+          currentSlide++;
+          updateSlides();
+        }
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (currentSlide > 1) {
+          currentSlide--;
+          updateSlides();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextBtn.click();
+        if (e.key === 'ArrowLeft') prevBtn.click();
+      });
+
+      const ctx = document.getElementById('importanceChart')?.getContext('2d');
+      if (ctx) {
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['lag12', 'lag1', 'Año', 'lag24', 'Mes', 'Ley Garantías'],
+            datasets: [{
+              label: 'Importancia relativa',
+              data: [34, 24, 18, 14, 9, 0.06],
+              backgroundColor: ['#1F4E79', '#1F4E79', '#1F4E79', '#1F4E79', '#1F4E79', '#C00000'],
+              borderRadius: 8
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Importancia aproximada'
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        });
+      }
+
+      updateSlides();
+    });
+  </script>
+
+</body>
+</html>

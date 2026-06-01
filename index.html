@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto de Grado - Ley de Garantías y Fianzas</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'santoto-orange': '#F5A623',
+            'santoto-dark': '#1A202C',
+            'santoto-light-gray': '#F7FAFC',
+            'estado-blue': '#0B3D91'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .hero-bg {
+      background-image:
+        linear-gradient(rgba(247, 250, 252, 0.94), rgba(247, 250, 252, 0.99)),
+        url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=2070&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .info-card {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 0.9rem;
+      box-shadow: 0 8px 16px -8px rgba(0,0,0,0.25);
+      border-left: 5px solid #F5A623;
+    }
+
+    .nav-card {
+      background-color: #F8FAFC;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 18px -12px rgba(0,0,0,0.35);
+      transition: all 0.25s ease;
+      border-bottom: 4px solid transparent;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 26px -14px rgba(0,0,0,0.45);
+      border-bottom-color: #F5A623;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background-color: #fff7ed;
+      color: #9a3412;
+    }
+  </style>
+</head>
+
+<body class="bg-santoto-light-gray text-slate-800">
+
+  <!-- Header -->
+  <header class="bg-santoto-dark shadow-lg sticky top-0 z-50">
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html">
+        <img
+          src="https://usantotomas.edu.co/hs-fs/hubfs/social-suggested-images/usantotomas.edu.cohs-fshubfsLogo%20Santoto%20-%20SP%20Bogota%20Horizontal%20blanco-2.png?width=188&height=43"
+          alt="Logo Universidad Santo Tomás"
+          class="h-10"
+        >
+      </a>
+
+      <h1 class="text-sm md:text-lg font-semibold text-white text-right">
+        Proyecto de grado · Estadística
+      </h1>
+    </nav>
+  </header>
+
+  <!-- Portada -->
+  <main class="hero-bg">
+    <div class="container mx-auto px-6 pt-24 md:pt-28 pb-20 text-center">
+      <div class="max-w-5xl mx-auto">
+
+        <p class="font-semibold text-santoto-orange text-base md:text-lg mb-4">
+          Proyecto de grado · Línea de Fianzas · Ley de Garantías Electorales
+        </p>
+
+        <h2 class="text-2xl md:text-4xl font-extrabold text-santoto-dark leading-tight max-w-5xl mx-auto">
+          Modelación y predicción del comportamiento de la producción de primas de la línea de Fianzas de Seguros del Estado frente a la Ley de Garantías Electorales para el ciclo electoral colombiano de 2026
+        </h2>
+
+        <p class="text-base md:text-lg text-slate-700 mt-8 max-w-4xl mx-auto leading-relaxed">
+          Análisis estadístico y predictivo para entender cómo se comporta la producción mensual de primas de Fianzas durante los periodos electorales y qué modelo permite anticipar mejor su comportamiento en 2026.
+        </p>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Contexto -->
+  <section class="bg-white py-16">
+    <div class="container mx-auto px-6">
+      <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
+
+        <div class="info-card">
+          <span class="pill">Contexto</span>
+          <h3 class="text-2xl font-bold text-santoto-dark mt-4 mb-4">
+            Seguros del Estado y la línea de Fianzas
+          </h3>
+          <p class="text-slate-700 leading-relaxed">
+            Seguros del Estado es una compañía colombiana de seguros con trayectoria en la protección de personas, empresas y entidades públicas. Dentro de sus líneas de negocio se encuentran Fianzas, Generales, Vida, SOAT y Automóviles.
+          </p>
+          <p class="text-slate-700 leading-relaxed mt-4">
+            Este proyecto se enfoca en la línea de <strong>Fianzas</strong>, por su relación con la contratación pública y la necesidad de anticipar su comportamiento durante periodos electorales.
+          </p>
+        </div>
+
+        <div class="info-card">
+          <span class="pill">Ley de Garantías</span>
+          <h3 class="text-2xl font-bold text-santoto-dark mt-4 mb-4">
+            ¿Por qué es relevante?
+          </h3>
+          <p class="text-slate-700 leading-relaxed">
+            La Ley de Garantías Electorales establece restricciones a ciertas actividades del Estado durante periodos previos a elecciones. Como Fianzas está relacionada con contratos que requieren respaldo, resulta importante revisar si estos periodos afectan la producción mensual de primas.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Pregunta y objetivos -->
+  <section class="bg-santoto-light-gray py-16">
+    <div class="container mx-auto px-6">
+
+      <div class="max-w-6xl mx-auto">
+        <div class="info-card mb-8">
+          <span class="pill">Pregunta problema</span>
+          <p class="text-xl text-slate-700 leading-relaxed mt-4">
+            ¿Cuál es el efecto de los periodos de Ley de Garantías Electorales sobre el comportamiento mensual de la producción de primas de la línea de Fianzas de Seguros del Estado y qué modelo presenta mejor capacidad predictiva para pronosticar su comportamiento durante el periodo electoral y postelectoral de 2026?
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="info-card">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+              Objetivo general
+            </h3>
+            <p class="text-slate-700 leading-relaxed">
+              Analizar y modelar el comportamiento temporal de la producción mensual de primas de la línea de Fianzas de Seguros del Estado, evaluando el efecto de la Ley de Garantías Electorales mediante modelos de series de tiempo y técnicas de machine learning, con el fin de generar pronósticos para el periodo electoral y postelectoral de 2026.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+              Objetivos específicos
+            </h3>
+            <ul class="space-y-3 text-slate-700">
+              <li>• Construir la serie mensual de primas de Fianzas.</li>
+              <li>• Identificar periodos de Ley de Garantías en la serie histórica.</li>
+              <li>• Comparar meses con Ley y sin Ley mediante análisis descriptivo y pruebas estadísticas.</li>
+              <li>• Ajustar modelos SARIMAX y Random Forest para pronosticar 2026.</li>
+              <li>• Comparar el desempeño predictivo de los modelos.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Navegación -->
+  <section class="bg-white py-20">
+    <div class="container mx-auto px-6 text-center">
+      <div class="w-24 h-1.5 bg-santoto-orange mx-auto mb-10 rounded"></div>
+
+      <h3 class="text-3xl md:text-4xl font-bold text-santoto-dark mb-4">
+        Navegación del estudio
+      </h3>
+
+      <p class="text-slate-600 max-w-3xl mx-auto mb-12">
+        La sustentación se divide en tres módulos para recorrer el proyecto de forma rápida y ordenada.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto text-left">
+
+        <a href="analisis_exploratorio.html" class="nav-card block">
+          <p class="text-santoto-orange font-bold mb-2">MÓDULO 1</p>
+          <h4 class="text-xl font-bold text-santoto-dark mb-3">
+            Datos y análisis exploratorio
+          </h4>
+          <p class="text-slate-600">
+            Datos, filtros, construcción de la serie mensual, comportamiento histórico, Ley de Garantías, comparación con y sin Ley e inflación como lectura complementaria.
+          </p>
+        </a>
+
+        <a href="modelacion.html" class="nav-card block">
+          <p class="text-santoto-orange font-bold mb-2">MÓDULO 2</p>
+          <h4 class="text-xl font-bold text-santoto-dark mb-3">
+            Modelación predictiva
+          </h4>
+          <p class="text-slate-600">
+            SARIMAX 2007-2025, revisión GARCH, SARIMAX 2010-2025 y modelo Random Forest con variables rezagadas.
+          </p>
+        </a>
+
+        <a href="resultados_conclusiones.html" class="nav-card block">
+          <p class="text-santoto-orange font-bold mb-2">MÓDULO 3</p>
+          <h4 class="text-xl font-bold text-santoto-dark mb-3">
+            Comparación y conclusiones
+          </h4>
+          <p class="text-slate-600">
+            Comparación de modelos, predicción final 2026, respuesta a la pregunta problema y línea futura del estudio.
+          </p>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Metodología resumida -->
+  <section class="bg-santoto-light-gray py-20">
+    <div class="container mx-auto px-6">
+      <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-start">
+
+        <div>
+          <h3 class="text-3xl md:text-4xl font-bold text-santoto-dark mb-8">
+            Ruta metodológica
+          </h3>
+
+          <ol class="relative border-l border-gray-300">
+            <li class="mb-10 ml-8">
+              <span class="absolute flex items-center justify-center w-8 h-8 bg-santoto-orange rounded-full -left-4 ring-8 ring-santoto-light-gray text-white font-bold">
+                1
+              </span>
+              <h4 class="mb-2 text-xl font-semibold text-gray-900">
+                Construcción de la serie mensual
+              </h4>
+              <p class="text-gray-600">
+                Se consolidó la producción de primas de Fianzas a nivel mensual entre 2007 y 2025.
+              </p>
+            </li>
+
+            <li class="mb-10 ml-8">
+              <span class="absolute flex items-center justify-center w-8 h-8 bg-santoto-orange rounded-full -left-4 ring-8 ring-santoto-light-gray text-white font-bold">
+                2
+              </span>
+              <h4 class="mb-2 text-xl font-semibold text-gray-900">
+                Análisis de Ley de Garantías
+              </h4>
+              <p class="text-gray-600">
+                Se identificaron los meses con Ley y se compararon frente a los meses sin Ley.
+              </p>
+            </li>
+
+            <li class="ml-8">
+              <span class="absolute flex items-center justify-center w-8 h-8 bg-santoto-orange rounded-full -left-4 ring-8 ring-santoto-light-gray text-white font-bold">
+                3
+              </span>
+              <h4 class="mb-2 text-xl font-semibold text-gray-900">
+                Modelación y predicción
+              </h4>
+              <p class="text-gray-600">
+                Se evaluaron modelos SARIMAX y Random Forest para proyectar la producción mensual de 2026.
+              </p>
+            </li>
+          </ol>
+        </div>
+
+        <div>
+          <h3 class="text-3xl md:text-4xl font-bold text-santoto-dark mb-8">
+            Valor del proyecto
+          </h3>
+
+          <div class="space-y-6">
+            <div class="info-card">
+              <h4 class="font-semibold text-lg text-santoto-dark mb-2">
+                Anticipar
+              </h4>
+              <p class="text-slate-600">
+                Identificar meses donde podría esperarse una menor producción.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h4 class="font-semibold text-lg text-santoto-dark mb-2">
+                Planear
+              </h4>
+              <p class="text-slate-600">
+                Preparar estrategias comerciales durante el periodo electoral y postelectoral.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h4 class="font-semibold text-lg text-santoto-dark mb-2">
+                Monitorear
+              </h4>
+              <p class="text-slate-600">
+                Comparar la producción real de 2026 frente a la predicción mensual del modelo.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-santoto-dark">
+    <div class="container mx-auto px-6 py-8 text-center text-slate-300">
+      <p class="font-semibold">
+        Proyecto de grado · Pregrado en Estadística
+      </p>
+      <p class="text-sm mt-2">
+        Universidad Santo Tomás · Seguros del Estado · Línea de Fianzas
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

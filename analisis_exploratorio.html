@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Módulo 1 - Datos y Análisis Exploratorio</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'santoto-orange': '#F5A623',
+            'santoto-dark': '#1A202C',
+            'santoto-grey': '#4A5568',
+            'santoto-light': '#F7FAFC',
+            'estado-blue': '#0B3D91'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      background-color: #f1f5f9;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0;
+      transition: opacity 0.45s ease-in-out;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 1;
+    }
+
+    .slide-content {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .info-card {
+      background: white;
+      padding: 1.4rem;
+      border-radius: 0.9rem;
+      box-shadow: 0 10px 18px -12px rgba(0, 0, 0, 0.35);
+      border-left: 5px solid #F5A623;
+    }
+
+    .soft-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 18px -12px rgba(0, 0, 0, 0.35);
+    }
+
+    .note {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 320px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      background: white;
+      border-radius: 0.8rem;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 0.72rem 0.9rem;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    thead th {
+      background-color: #fdeed9;
+      color: #7c4a03;
+      font-weight: 700;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background-color: #fff7ed;
+      color: #9a3412;
+    }
+
+    .placeholder-img {
+      border: 2px dashed #cbd5e1;
+      background: #f8fafc;
+      border-radius: 1rem;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #64748b;
+      padding: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="bg-santoto-dark shadow-lg fixed top-0 left-0 right-0 z-20">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html">
+        <img
+          src="https://usantotomas.edu.co/hs-fs/hubfs/social-suggested-images/usantotomas.edu.cohs-fshubfsLogo%20Santoto%20-%20SP%20Bogota%20Horizontal%20blanco-2.png?width=188&height=43"
+          alt="Logo Universidad Santo Tomás"
+          class="h-10"
+        />
+      </a>
+
+      <div class="space-x-4">
+        <a href="index.html" class="text-gray-300 hover:text-white transition text-sm font-medium">Inicio</a>
+        <a href="modelacion.html" class="bg-santoto-orange text-white px-4 py-2 rounded-md hover:opacity-80 transition text-sm font-medium">
+          Ir a Modelación →
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- SLIDE 1 -->
+  <section id="slide-1" class="slide active">
+    <div class="slide-content text-center">
+      <div class="max-w-6xl mx-auto p-8">
+
+        <p class="text-2xl font-bold text-santoto-orange">MÓDULO 1</p>
+
+        <h1 class="text-5xl font-extrabold text-santoto-dark mt-3">
+          Datos y análisis exploratorio
+        </h1>
+
+        <p class="text-xl text-slate-600 mt-6 max-w-4xl mx-auto">
+          En este módulo se muestra cómo se construyó la serie mensual de Fianzas, cómo se comportan las primas en el tiempo y qué señales aparecen al comparar los periodos con y sin Ley de Garantías.
+        </p>
+
+        <div class="mt-10 grid md:grid-cols-4 gap-5 text-left">
+          <div class="info-card">
+            <h3 class="font-bold text-santoto-dark text-lg">Datos</h3>
+            <p class="text-slate-600 mt-2">Base histórica de producción de primas.</p>
+          </div>
+
+          <div class="info-card">
+            <h3 class="font-bold text-santoto-dark text-lg">Serie mensual</h3>
+            <p class="text-slate-600 mt-2">Agrupación por año y mes.</p>
+          </div>
+
+          <div class="info-card">
+            <h3 class="font-bold text-santoto-dark text-lg">Ley de Garantías</h3>
+            <p class="text-slate-600 mt-2">Identificación de meses electorales.</p>
+          </div>
+
+          <div class="info-card">
+            <h3 class="font-bold text-santoto-dark text-lg">Comparación</h3>
+            <p class="text-slate-600 mt-2">Meses con Ley frente a meses sin Ley.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+    <!-- SLIDE 2 -->
+    <section id="slide-2" class="slide">
+    <div class="slide-content">
+        <div class="max-w-6xl mx-auto p-8">
+
+        <p class="text-2xl font-bold text-santoto-orange text-center">DATOS Y FILTROS</p>
+
+        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+            Construcción de la serie mensual
+        </h2>
+
+        <p class="text-lg text-slate-600 mt-5 text-center max-w-4xl mx-auto">
+            La base original contiene registros individuales. Para el análisis de series de tiempo, la información se llevó a nivel mensual sumando la producción de primas de cada periodo.
+        </p>
+
+        <!-- Cuatro cuadros horizontales -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mt-8">
+
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-santoto-orange">
+            <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-santoto-orange font-bold mb-3">
+                1
+            </div>
+            <h3 class="text-lg font-bold text-santoto-dark mb-2">Línea trabajada</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+                Se filtró únicamente la línea de <strong>Fianzas</strong>, ya que es la línea central del proyecto.
+            </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-santoto-orange">
+            <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-santoto-orange font-bold mb-3">
+                2
+            </div>
+            <h3 class="text-lg font-bold text-santoto-dark mb-2">Ramos excluidos</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+                Se excluyeron los ramos <strong>55 – RCE Contratos PPP</strong> y <strong>57 – PA.PPP</strong>.
+            </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-santoto-orange">
+            <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-santoto-orange font-bold mb-3">
+                3
+            </div>
+            <h3 class="text-lg font-bold text-santoto-dark mb-2">Variables numéricas</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+                Se utilizaron variables como <strong>Imp Prima</strong>, <strong>Imp Prima Cuota</strong> y valores asociados a la producción.
+            </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-5 border-t-4 border-santoto-orange">
+            <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-santoto-orange font-bold mb-3">
+                4
+            </div>
+            <h3 class="text-lg font-bold text-santoto-dark mb-2">Variables de Texto y temporales</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+                Se revisaron variables como <strong>Código y Ramo</strong>, <strong>Sucursal Agrupada</strong>, <strong>Línea +</strong>, mes y año.
+            </p>
+            </div>
+
+        </div>
+
+        <!-- Periodo de análisis -->
+        <div class="mt-8">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+            Periodo de análisis
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+
+            <!-- Tabla a la izquierda -->
+            <div class="bg-white rounded-2xl shadow-lg p-4">
+                <table class="w-full text-sm">
+                <thead>
+                    <tr>
+                    <th>Indicador</th>
+                    <th>Resultado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td>Total de meses analizados</td>
+                    <td><strong>228</strong></td>
+                    </tr>
+                    <tr>
+                    <td>Periodo inicial</td>
+                    <td>Enero de 2007</td>
+                    </tr>
+                    <tr>
+                    <td>Periodo final</td>
+                    <td>Diciembre de 2025</td>
+                    </tr>
+                    <tr>
+                    <td>Meses sin dato de prima</td>
+                    <td><strong>0</strong></td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+
+            <!-- Mensaje a la derecha -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange flex items-center">
+                <p class="text-lg text-slate-700 leading-relaxed">
+                Después de agrupar la información por mes, la serie final quedó completa.
+                Por esta razón, no fue necesario aplicar técnicas de imputación para la modelación.
+                </p>
+            </div>
+
+            </div>
+        </div>
+
+        </div>
+    </div>
+    </section>
+
+    <!-- SLIDE 3 -->
+    <section id="slide-3" class="slide">
+    <div class="slide-content">
+        <div class="max-w-6xl mx-auto p-8">
+
+        <p class="text-2xl font-bold text-santoto-orange text-center">ANÁLISIS EXPLORATORIO</p>
+
+        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+            Serie mensual, transformación y descomposición STL
+        </h2>
+
+        <p class="text-lg text-slate-600 mt-5 text-center max-w-4xl mx-auto">
+            A partir de la serie mensual de primas de Fianzas, se revisó su comportamiento general,
+            se aplicó una transformación logarítmica para suavizar los picos y luego se realizó
+            una descomposición STL para separar sus principales componentes.
+        </p>
+
+        <!-- Parte superior: imagen + 2 cuadros -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-10 items-center">
+
+            <!-- Imagen serie original -->
+            <div class="lg:col-span-3 flex items-center justify-center">
+            <img 
+                src="serie_original.png" 
+                alt="Serie original de primas de Fianzas"
+                class="w-full max-w-3xl rounded-2xl shadow-xl object-contain bg-white p-2"
+            >
+            </div>
+
+            <!-- Cuadros derechos -->
+            <div class="lg:col-span-2 space-y-6">
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+                <h3 class="text-2xl font-bold text-santoto-dark mb-3">Serie original</h3>
+                <p class="text-slate-600 text-lg leading-relaxed">
+                La producción de primas presenta cambios importantes entre meses y muestra algunos
+                picos altos en ciertos periodos.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+                <h3 class="text-2xl font-bold text-santoto-dark mb-3">Transformación logarítmica</h3>
+                <p class="text-slate-600 text-lg leading-relaxed">
+                Se aplicó para suavizar esos picos y trabajar con una serie más estable antes de la modelación.
+                </p>
+            </div>
+
+            </div>
+        </div>
+
+        <!-- Título STL -->
+        <div class="mt-12 text-center">
+            <h3 class="text-3xl font-bold text-santoto-dark">Descomposición STL</h3>
+            <p class="text-slate-600 text-lg mt-2 max-w-3xl mx-auto">
+            Esta descomposición permite separar la serie en tendencia, estacionalidad y residuos.
+            </p>
+        </div>
+
+        <!-- Imagen STL -->
+        <div class="mt-8 flex items-center justify-center">
+            <img 
+            src="descomposicion_stl.png" 
+            alt="Descomposición STL de la serie de primas"
+            class="w-full max-w-5xl rounded-2xl shadow-xl object-contain bg-white p-2"
+            >
+        </div>
+
+        <!-- Cuadros STL -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-3">Tendencia</h3>
+            <p class="text-slate-600 text-lg leading-relaxed">
+                Muestra que la producción de primas ha venido creciendo con el paso de los años,
+                especialmente desde 2020.
+            </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-3">Estacionalidad</h3>
+            <p class="text-slate-600 text-lg leading-relaxed">
+                Se observa un patrón que se repite cada año, con mayor producción hacia diciembre.
+            </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-3">Residuos</h3>
+            <p class="text-slate-600 text-lg leading-relaxed">
+                Ayudan a identificar meses que se alejaron del comportamiento esperado,
+                como algunos valores atípicos en 2008 y 2020-2021.
+            </p>
+            </div>
+
+        </div>
+
+        </div>
+    </div>
+    </section>
+
+    <!-- SLIDE 4 -->
+    <section id="slide-4" class="slide">
+    <div class="slide-content">
+        <div class="max-w-7xl mx-auto px-8 py-10">
+
+        <p class="text-2xl font-bold text-santoto-orange text-center">LEY DE GARANTÍAS</p>
+
+        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+            Comparación entre meses con Ley y sin Ley
+        </h2>
+
+        <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+            Para evaluar los periodos electorales, se creó una variable exógena que identifica los meses con Ley de Garantías y permite comparar su comportamiento frente a los meses sin Ley.
+        </p>
+
+        <!-- Parte superior -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8 items-start">
+
+            <!-- Variable exógena -->
+            <div class="bg-white rounded-3xl shadow-lg p-6 h-full">
+            <h3 class="text-2xl font-bold text-santoto-dark text-center mb-6">
+                Variable exógena
+            </h3>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-orange-50 border border-orange-200 rounded-2xl p-5 text-center">
+                <div class="text-5xl font-extrabold text-santoto-orange leading-none">1</div>
+                <p class="text-base text-slate-700 mt-3 font-semibold">Mes con Ley</p>
+                <p class="text-sm text-slate-500 mt-2">49 meses</p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-center">
+                <div class="text-5xl font-extrabold text-santoto-dark leading-none">0</div>
+                <p class="text-base text-slate-700 mt-3 font-semibold">Mes sin Ley</p>
+                <p class="text-sm text-slate-500 mt-2">179 meses</p>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-slate-50 rounded-2xl p-4 border-l-4 border-santoto-orange">
+                <p class="text-sm text-slate-600 italic text-center leading-relaxed">
+                Esta variable se incorpora luego en el modelo SARIMAX para evaluar el posible efecto de la Ley sobre las primas.
+                </p>
+            </div>
+            </div>
+
+            <!-- Boxplot -->
+            <div class="bg-white rounded-3xl shadow-lg p-5 lg:col-span-2 h-full">
+            <h3 class="text-2xl font-bold text-santoto-dark mb-4 text-center">
+                Distribución de primas mensuales
+            </h3>
+
+            <img src="boxplot_ley.png"
+                alt="Boxplot de primas mensuales con y sin Ley de Garantías"
+                class="w-full rounded-2xl object-contain max-h-[380px] mx-auto">
+
+            <p class="text-sm text-slate-500 text-center mt-3">
+                Comparación entre meses con Ley y meses sin Ley.
+            </p>
+            </div>
+
+        </div>
+
+        <!-- Parte inferior: tablas -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+
+            <!-- Diferencias descriptivas -->
+            <div class="bg-white rounded-3xl shadow-lg p-5">
+            <h3 class="text-xl font-bold text-santoto-dark mb-4">
+                Diferencias descriptivas
+            </h3>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Indicador</th>
+                    <th>Resultado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Promedio con Ley</td>
+                    <td>$18.880 millones</td>
+                </tr>
+                <tr>
+                    <td>Promedio sin Ley</td>
+                    <td>$21.466 millones</td>
+                </tr>
+                <tr>
+                    <td>Diferencia promedio</td>
+                    <td><strong>-12,05%</strong></td>
+                </tr>
+                <tr>
+                    <td>Diferencia mediana</td>
+                    <td><strong>-1,4%</strong></td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <!-- Pruebas estadísticas -->
+            <div class="bg-white rounded-3xl shadow-lg p-5">
+            <h3 class="text-xl font-bold text-santoto-dark mb-4">
+                Pruebas estadísticas
+            </h3>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Prueba</th>
+                    <th>Resultado</th>
+                    <th>Lectura</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Shapiro-Wilk</td>
+                    <td>No normal</td>
+                    <td>Se usa Wilcoxon como apoyo</td>
+                </tr>
+                <tr>
+                    <td>t-test</td>
+                    <td>p = 0,4738</td>
+                    <td>Sin diferencia significativa</td>
+                </tr>
+                <tr>
+                    <td>Wilcoxon</td>
+                    <td>p = 0,4604</td>
+                    <td>Sin diferencia significativa</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+
+        </div>
+
+        <!-- Interpretación final -->
+        <div class="mt-6 bg-white rounded-3xl shadow-lg p-5 border-l-4 border-santoto-orange">
+            <p class="text-lg text-slate-700 leading-relaxed">
+            Los meses con Ley presentan un promedio menor de primas, pero las pruebas estadísticas no muestran una diferencia significativa entre los dos grupos. Por eso, la Ley muestra una señal descriptiva, aunque no explica por sí sola todo el comportamiento de la producción.
+            </p>
+        </div>
+
+        </div>
+    </div>
+    </section>
+
+    <!-- SLIDE 5 -->
+    <section id="slide-5" class="slide">
+    <div class="slide-content">
+        <div class="max-w-7xl mx-auto px-8 py-10">
+
+        <p class="text-2xl font-bold text-santoto-orange text-center">ANÁLISIS EXPLORATORIO</p>
+
+        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+            Primas ajustadas por inflación
+        </h2>
+
+        <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+            Se ajustaron las primas por inflación para saber si el crecimiento observado corresponde realmente a mayor producción o si una parte se explica por el aumento general de precios.
+        </p>
+
+        <!-- Gráfica + explicación -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 mt-10 items-center">
+
+            <!-- Imagen de crecimiento nominal vs real -->
+            <div class="lg:col-span-3 flex items-center justify-center">
+            <img 
+                src="crecimiento_nominal_real.png" 
+                alt="Crecimiento nominal y real de primas de Fianzas"
+                class="w-full max-w-4xl rounded-2xl shadow-xl object-contain bg-white p-2"
+            >
+            </div>
+
+            <!-- Cuadros explicativos -->
+            <div class="lg:col-span-2 space-y-6">
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+                <h3 class="text-xl font-bold text-santoto-dark mb-3">
+                Hallazgo principal
+                </h3>
+                <p class="text-slate-600 text-base leading-relaxed">
+                En varios años, el crecimiento real fue menor que el crecimiento nominal. Esto muestra que una parte del aumento observado se explica por la inflación.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+                <h3 class="text-xl font-bold text-santoto-dark mb-3">
+                Últimos años
+                </h3>
+                <p class="text-slate-600 text-base leading-relaxed">
+                Desde 2023 el crecimiento real fue negativo. En 2025, el crecimiento nominal fue de <strong>0,6%</strong>, mientras que el real fue de <strong>-4,3%</strong>.
+                </p>
+            </div>
+
+            </div>
+        </div>
+
+        <!-- Conclusión destacada -->
+        <div class="mt-8 bg-white rounded-3xl shadow-lg p-6 border-l-4 border-santoto-orange">
+            <p class="text-xl text-slate-700 leading-relaxed text-center">
+            Aunque las primas crecieron en pesos, al descontar la inflación se observa que en los últimos años la línea ha perdido fuerza.
+            </p>
+        </div>
+
+        </div>
+    </div>
+    </section>
+
+    <!-- SLIDE 6 -->
+    <section id="slide-6" class="slide bg-santoto-dark text-white">
+    <div class="slide-content text-center">
+        <div class="max-w-5xl mx-auto p-8">
+
+        <p class="text-2xl font-bold text-santoto-orange">CIERRE DEL MÓDULO</p>
+
+        <h2 class="text-5xl font-extrabold mt-3">
+            ¿Por qué pasar a modelos?
+        </h2>
+
+        <p class="text-xl text-slate-300 mt-6 max-w-4xl mx-auto">
+            Con el análisis exploratorio se pudo ver que la Ley de Garantías puede estar relacionada con una menor producción promedio, pero también se encontró que las primas tienen otros comportamientos importantes que no se pueden ignorar.
+        </p>
+
+        <div class="mt-10 grid md:grid-cols-3 gap-6 text-left">
+
+            <div class="bg-white/10 p-6 rounded-xl">
+            <h3 class="font-bold text-santoto-orange">Tendencia</h3>
+            <p class="text-slate-300 mt-2">
+                La producción no se mantiene igual en el tiempo; cambia entre años y ha tenido un crecimiento más fuerte en algunos periodos.
+            </p>
+            </div>
+
+            <div class="bg-white/10 p-6 rounded-xl">
+            <h3 class="font-bold text-santoto-orange">Estacionalidad</h3>
+            <p class="text-slate-300 mt-2">
+                Hay meses que normalmente tienen mayor producción, especialmente hacia el cierre del año.
+            </p>
+            </div>
+
+            <div class="bg-white/10 p-6 rounded-xl">
+            <h3 class="font-bold text-santoto-orange">Ley de Garantías</h3>
+            <p class="text-slate-300 mt-2">
+                La Ley puede influir en las primas, pero no se puede analizar sola porque la serie también tiene tendencia y patrones mensuales.
+            </p>
+            </div>
+
+        </div>
+
+        <div class="mt-10 bg-white/10 rounded-xl p-5 max-w-4xl mx-auto">
+            <p class="text-slate-200 text-lg">
+            Por eso, después del análisis exploratorio se pasa a la modelación. La idea es usar modelos que permitan analizar al mismo tiempo la tendencia, la estacionalidad y la Ley de Garantías, para generar una predicción más completa para 2026.
+            </p>
+        </div>
+
+        <div class="mt-8">
+            <a href="modelacion.html" class="bg-santoto-orange text-white px-8 py-3 rounded-lg hover:opacity-80 transition text-lg font-semibold">
+            Continuar a Modelación →
+            </a>
+        </div>
+
+        </div>
+    </div>
+    </section>
+
+  <!-- Navegación -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t z-20">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+      <button id="prevBtn" class="bg-santoto-dark text-white px-6 py-2 rounded-lg hover:bg-santoto-grey transition disabled:opacity-50">
+        Anterior
+      </button>
+
+      <div id="slide-counter" class="text-sm text-slate-600 font-semibold"></div>
+
+      <button id="nextBtn" class="bg-santoto-orange text-white px-6 py-2 rounded-lg hover:opacity-80 transition">
+        Siguiente
+      </button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let currentSlide = 1;
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      const nextBtn = document.getElementById('nextBtn');
+      const prevBtn = document.getElementById('prevBtn');
+      const slideCounter = document.getElementById('slide-counter');
+
+      function updateSlides() {
+        slides.forEach((slide, index) => {
+          slide.classList.toggle('active', index + 1 === currentSlide);
+        });
+
+        slideCounter.textContent = `Diapositiva ${currentSlide} de ${totalSlides}`;
+        prevBtn.disabled = currentSlide === 1;
+        nextBtn.disabled = currentSlide === totalSlides;
+      }
+
+      nextBtn.addEventListener('click', () => {
+        if (currentSlide < totalSlides) {
+          currentSlide++;
+          updateSlides();
+        }
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (currentSlide > 1) {
+          currentSlide--;
+          updateSlides();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextBtn.click();
+        if (e.key === 'ArrowLeft') prevBtn.click();
+      });
+
+      updateSlides();
+    });
+  </script>
+
+</body>
+</html>
