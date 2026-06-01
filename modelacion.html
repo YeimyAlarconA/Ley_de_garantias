@@ -310,7 +310,7 @@
 
             <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
                 <h3 class="text-xl font-bold text-santoto-dark mb-3">
-                Lectura de la serie
+                Comportamiento de la serie
                 </h3>
                 <p class="text-slate-600 leading-relaxed">
                 Desde 2010, la serie muestra un crecimiento progresivo de las primas de Fianzas y algunos picos que se repiten en ciertos meses del año.
@@ -322,7 +322,7 @@
                 ¿Por qué SARIMAX?
                 </h3>
                 <p class="text-slate-600 leading-relaxed">
-                Este comportamiento confirma que existe una dinámica temporal con tendencia y estacionalidad, por lo que se continúa con un modelo SARIMAX.
+                Como la serie cambia con el tiempo y presenta patrones que se repiten por meses, SARIMAX permite trabajar esa información dentro del modelo e incluir la Ley de Garantías como variable externa.
                 </p>
             </div>
 
@@ -346,7 +346,7 @@
                 Se aplicaron las pruebas de <strong>Dickey-Fuller</strong> y <strong>Phillips-Perron</strong> para revisar la presencia de raíz unitaria en la serie.
                 </p>
                 <p class="text-slate-600 text-sm leading-relaxed mt-3">
-                Phillips-Perron presentó un <strong>p-value = 0,0100</strong>. Para Dickey-Fuller, reemplaza aquí el valor exacto obtenido en R.
+                Dickey-Fuller presentó un <strong>p-value = 0,1439</strong>, mientras que Phillips-Perron presentó un <strong>p-value = 0,0100</strong>. Como las pruebas dieron señales diferentes, se usaron como guía para probar varias estructuras SARIMAX.
                 </p>
             </div>
 
@@ -355,10 +355,10 @@
                 Diferenciación
                 </h4>
                 <p class="text-slate-600 text-sm leading-relaxed">
-                La revisión de diferencias indicó trabajar con una diferencia ordinaria <strong>d = 1</strong> y sin diferencia estacional <strong>D = 0</strong>.
+                La revisión inicial sugirió una diferencia ordinaria <strong>d = 1</strong> y una diferencia estacional <strong>D = 1</strong>.
                 </p>
                 <p class="text-slate-600 text-sm leading-relaxed mt-3">
-                Después de aplicar la diferencia, la serie se observó más estable visualmente.
+                Después de aplicar las diferencias, la serie se observó más estable visualmente.
                 </p>
             </div>
 
