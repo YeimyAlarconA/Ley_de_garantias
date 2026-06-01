@@ -111,8 +111,57 @@
     </div>
   </main>
 
+  <!-- Navegación -->
+  <section class="bg-white py-20">
+    <div class="container mx-auto px-6 text-center">
+      <div class="w-24 h-1.5 bg-santoto-orange mx-auto mb-10 rounded"></div>
+
+      <h3 class="text-3xl md:text-4xl font-bold text-santoto-dark mb-4">
+        Navegación del estudio
+      </h3>
+
+      <p class="text-slate-600 max-w-3xl mx-auto mb-12">
+        La sustentación se divide en tres módulos para recorrer el proyecto de forma rápida y ordenada.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto text-left">
+
+        <a href="analisis_exploratorio.html" class="nav-card block">
+          <p class="text-santoto-orange font-bold mb-2">MÓDULO 1</p>
+          <h4 class="text-xl font-bold text-santoto-dark mb-3">
+            Datos y análisis exploratorio
+          </h4>
+          <p class="text-slate-600">
+            Datos, filtros, construcción de la serie mensual, comportamiento histórico y comparación entre meses con y sin Ley de Garantías.
+          </p>
+        </a>
+
+        <a href="modelacion.html" class="nav-card block">
+          <p class="text-santoto-orange font-bold mb-2">MÓDULO 2</p>
+          <h4 class="text-xl font-bold text-santoto-dark mb-3">
+            Modelación predictiva
+          </h4>
+          <p class="text-slate-600">
+            Escenarios SARIMAX, validación del modelo final y modelo Random Forest como complemento de machine learning.
+          </p>
+        </a>
+
+        <a href="resultados_conclusiones.html" class="nav-card block">
+          <p class="text-santoto-orange font-bold mb-2">MÓDULO 3</p>
+          <h4 class="text-xl font-bold text-santoto-dark mb-3">
+            Comparación y conclusiones
+          </h4>
+          <p class="text-slate-600">
+            Comparación de modelos, predicción 2026, respuesta a la pregunta problema y continuidad del estudio.
+          </p>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
   <!-- Contexto -->
-  <section class="bg-white py-16">
+  <section class="bg-santoto-light-gray py-16">
     <div class="container mx-auto px-6">
       <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
 
@@ -143,8 +192,8 @@
     </div>
   </section>
 
-  <!-- Pregunta y objetivos -->
-  <section class="bg-santoto-light-gray py-16">
+  <!-- Pregunta y objetivo general -->
+  <section class="bg-white py-16">
     <div class="container mx-auto px-6">
 
       <div class="max-w-6xl mx-auto">
@@ -155,166 +204,95 @@
           </p>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8">
-          <div class="info-card">
-            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
-              Objetivo general
-            </h3>
-            <p class="text-slate-700 leading-relaxed">
-              Analizar y modelar el comportamiento temporal de la producción mensual de primas de la línea de Fianzas de Seguros del Estado, evaluando el efecto de la Ley de Garantías Electorales mediante modelos de series de tiempo y técnicas de machine learning, con el fin de generar pronósticos para el periodo electoral y postelectoral de 2026.
-            </p>
-          </div>
-
-          <div class="info-card">
-            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
-              Objetivos específicos
-            </h3>
-            <ul class="space-y-3 text-slate-700">
-              <li>• Construir la serie mensual de primas de Fianzas.</li>
-              <li>• Identificar periodos de Ley de Garantías en la serie histórica.</li>
-              <li>• Comparar meses con Ley y sin Ley mediante análisis descriptivo y pruebas estadísticas.</li>
-              <li>• Ajustar modelos SARIMAX y Random Forest para pronosticar 2026.</li>
-              <li>• Comparar el desempeño predictivo de los modelos.</li>
-            </ul>
-          </div>
+        <div class="info-card">
+          <span class="pill">Objetivo general</span>
+          <p class="text-xl text-slate-700 leading-relaxed mt-4">
+            Analizar y modelar el comportamiento temporal de la producción mensual de primas de la línea de Fianzas de Seguros del Estado, evaluando el efecto de la Ley de Garantías Electorales mediante modelos de series de tiempo y técnicas de machine learning, con el fin de generar pronósticos para el periodo electoral y postelectoral de 2026.
+          </p>
         </div>
       </div>
 
     </div>
   </section>
 
-  <!-- Navegación -->
-  <section class="bg-white py-20">
-    <div class="container mx-auto px-6 text-center">
-      <div class="w-24 h-1.5 bg-santoto-orange mx-auto mb-10 rounded"></div>
-
-      <h3 class="text-3xl md:text-4xl font-bold text-santoto-dark mb-4">
-        Navegación del estudio
-      </h3>
-
-      <p class="text-slate-600 max-w-3xl mx-auto mb-12">
-        La sustentación se divide en tres módulos para recorrer el proyecto de forma rápida y ordenada.
-      </p>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto text-left">
-
-        <a href="analisis_exploratorio.html" class="nav-card block">
-          <p class="text-santoto-orange font-bold mb-2">MÓDULO 1</p>
-          <h4 class="text-xl font-bold text-santoto-dark mb-3">
-            Datos y análisis exploratorio
-          </h4>
-          <p class="text-slate-600">
-            Datos, filtros, construcción de la serie mensual, comportamiento histórico, Ley de Garantías, comparación con y sin Ley e inflación como lectura complementaria.
-          </p>
-        </a>
-
-        <a href="modelacion.html" class="nav-card block">
-          <p class="text-santoto-orange font-bold mb-2">MÓDULO 2</p>
-          <h4 class="text-xl font-bold text-santoto-dark mb-3">
-            Modelación predictiva
-          </h4>
-          <p class="text-slate-600">
-            SARIMAX 2007-2025, revisión GARCH, SARIMAX 2010-2025 y modelo Random Forest con variables rezagadas.
-          </p>
-        </a>
-
-        <a href="resultados_conclusiones.html" class="nav-card block">
-          <p class="text-santoto-orange font-bold mb-2">MÓDULO 3</p>
-          <h4 class="text-xl font-bold text-santoto-dark mb-3">
-            Comparación y conclusiones
-          </h4>
-          <p class="text-slate-600">
-            Comparación de modelos, predicción final 2026, respuesta a la pregunta problema y línea futura del estudio.
-          </p>
-        </a>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- Metodología resumida -->
+  <!-- Objetivos específicos -->
   <section class="bg-santoto-light-gray py-20">
     <div class="container mx-auto px-6">
-      <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-start">
+      <div class="max-w-5xl mx-auto">
 
-        <div>
-          <h3 class="text-3xl md:text-4xl font-bold text-santoto-dark mb-8">
-            Ruta metodológica
+        <div class="text-center mb-12">
+          <p class="text-santoto-orange font-bold text-xl">
+            OBJETIVOS ESPECÍFICOS
+          </p>
+
+          <h3 class="text-3xl md:text-4xl font-bold text-santoto-dark mt-2">
+            ¿Qué se desarrolló en el proyecto?
           </h3>
-
-          <ol class="relative border-l border-gray-300">
-            <li class="mb-10 ml-8">
-              <span class="absolute flex items-center justify-center w-8 h-8 bg-santoto-orange rounded-full -left-4 ring-8 ring-santoto-light-gray text-white font-bold">
-                1
-              </span>
-              <h4 class="mb-2 text-xl font-semibold text-gray-900">
-                Construcción de la serie mensual
-              </h4>
-              <p class="text-gray-600">
-                Se consolidó la producción de primas de Fianzas a nivel mensual entre 2007 y 2025.
-              </p>
-            </li>
-
-            <li class="mb-10 ml-8">
-              <span class="absolute flex items-center justify-center w-8 h-8 bg-santoto-orange rounded-full -left-4 ring-8 ring-santoto-light-gray text-white font-bold">
-                2
-              </span>
-              <h4 class="mb-2 text-xl font-semibold text-gray-900">
-                Análisis de Ley de Garantías
-              </h4>
-              <p class="text-gray-600">
-                Se identificaron los meses con Ley y se compararon frente a los meses sin Ley.
-              </p>
-            </li>
-
-            <li class="ml-8">
-              <span class="absolute flex items-center justify-center w-8 h-8 bg-santoto-orange rounded-full -left-4 ring-8 ring-santoto-light-gray text-white font-bold">
-                3
-              </span>
-              <h4 class="mb-2 text-xl font-semibold text-gray-900">
-                Modelación y predicción
-              </h4>
-              <p class="text-gray-600">
-                Se evaluaron modelos SARIMAX y Random Forest para proyectar la producción mensual de 2026.
-              </p>
-            </li>
-          </ol>
         </div>
 
-        <div>
-          <h3 class="text-3xl md:text-4xl font-bold text-santoto-dark mb-8">
-            Valor del proyecto
-          </h3>
+        <ol class="relative border-l border-gray-300 max-w-4xl mx-auto">
 
-          <div class="space-y-6">
-            <div class="info-card">
-              <h4 class="font-semibold text-lg text-santoto-dark mb-2">
-                Anticipar
-              </h4>
-              <p class="text-slate-600">
-                Identificar meses donde podría esperarse una menor producción.
-              </p>
-            </div>
+          <li class="mb-10 ml-8">
+            <span class="absolute flex items-center justify-center w-8 h-8 bg-santoto-orange rounded-full -left-4 ring-8 ring-santoto-light-gray text-white font-bold">
+              1
+            </span>
+            <h4 class="mb-2 text-xl font-semibold text-gray-900">
+              Construcción de la serie mensual
+            </h4>
+            <p class="text-gray-600 leading-relaxed">
+              Construir la serie mensual de primas de Fianzas.
+            </p>
+          </li>
 
-            <div class="info-card">
-              <h4 class="font-semibold text-lg text-santoto-dark mb-2">
-                Planear
-              </h4>
-              <p class="text-slate-600">
-                Preparar estrategias comerciales durante el periodo electoral y postelectoral.
-              </p>
-            </div>
+          <li class="mb-10 ml-8">
+            <span class="absolute flex items-center justify-center w-8 h-8 bg-santoto-orange rounded-full -left-4 ring-8 ring-santoto-light-gray text-white font-bold">
+              2
+            </span>
+            <h4 class="mb-2 text-xl font-semibold text-gray-900">
+              Identificación de periodos con Ley
+            </h4>
+            <p class="text-gray-600 leading-relaxed">
+              Se marcaron los meses con Ley de Garantías dentro de la serie histórica para comparar su comportamiento frente a los meses sin Ley.
+            </p>
+          </li>
 
-            <div class="info-card">
-              <h4 class="font-semibold text-lg text-santoto-dark mb-2">
-                Monitorear
-              </h4>
-              <p class="text-slate-600">
-                Comparar la producción real de 2026 frente a la predicción mensual del modelo.
-              </p>
-            </div>
-          </div>
-        </div>
+          <li class="mb-10 ml-8">
+            <span class="absolute flex items-center justify-center w-8 h-8 bg-santoto-orange rounded-full -left-4 ring-8 ring-santoto-light-gray text-white font-bold">
+              3
+            </span>
+            <h4 class="mb-2 text-xl font-semibold text-gray-900">
+              Comparar los meses con Ley y sin Ley
+            </h4>
+            <p class="text-gray-600 leading-relaxed">
+              Se realizó un análisis descriptivo y pruebas estadísticas para revisar si existían diferencias entre ambos periodos.
+            </p>
+          </li>
+
+          <li class="mb-10 ml-8">
+            <span class="absolute flex items-center justify-center w-8 h-8 bg-santoto-orange rounded-full -left-4 ring-8 ring-santoto-light-gray text-white font-bold">
+              4
+            </span>
+            <h4 class="mb-2 text-xl font-semibold text-gray-900">
+              Modelación y predicción
+            </h4>
+            <p class="text-gray-600 leading-relaxed">
+              Se evaluaron modelos SARIMAX y Random Forest para representar el comportamiento temporal de la serie y generar predicciones para 2026.
+            </p>
+          </li>
+
+          <li class="ml-8">
+            <span class="absolute flex items-center justify-center w-8 h-8 bg-santoto-orange rounded-full -left-4 ring-8 ring-santoto-light-gray text-white font-bold">
+              5
+            </span>
+            <h4 class="mb-2 text-xl font-semibold text-gray-900">
+              Comparar el desempeño de los modelos
+            </h4>
+            <p class="text-gray-600 leading-relaxed">
+              Se compararon las métricas de error de ambos modelos para seleccionar el que presentó mejor capacidad predictiva.
+            </p>
+          </li>
+
+        </ol>
 
       </div>
     </div>
