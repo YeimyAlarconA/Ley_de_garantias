@@ -298,157 +298,97 @@
   </section>
 
   <!-- SLIDE 3 -->
+
   <section id="slide-3" class="slide">
     <div class="slide-content">
       <div class="max-w-7xl mx-auto px-8 py-10">
 
-        <p class="text-2xl font-bold text-santoto-orange text-center">RESPUESTA FINAL</p>
+  ```
+    <p class="text-2xl font-bold text-santoto-orange text-center">PRINCIPALES HALLAZGOS</p>
 
-        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
-          Respuesta a la pregunta problema
-        </h2>
+    <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
+      Conclusiones del estudio
+    </h2>
 
-        <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
-          El proyecto buscó responder dos puntos principales: qué efecto tienen los periodos de Ley de Garantías sobre la producción mensual de primas de Fianzas y qué modelo permite pronosticar mejor el comportamiento de la línea durante 2026.
+    <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
+      A partir del análisis exploratorio, las pruebas estadísticas y la comparación de modelos, se identificaron los siguientes hallazgos sobre el efecto de la Ley de Garantías y el comportamiento esperado de la línea de Fianzas para 2026.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+        <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+          ¿La Ley de Garantías afecta la producción de primas?
+        </h3>
+
+        <p class="text-slate-600 leading-relaxed">
+          Durante los meses con Ley de Garantías se observó una menor producción promedio de primas (-12,05%).
         </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-
-          <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
-            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
-              Efecto de la Ley de Garantías
-            </h3>
-
-            <p class="text-slate-600 leading-relaxed">
-              Los meses con Ley de Garantías presentaron un promedio menor de primas, con una diferencia aproximada de <strong>-12,05%</strong> frente a los meses sin Ley.
-            </p>
-
-            <p class="text-slate-600 leading-relaxed mt-3">
-              Al revisar la mediana, la diferencia fue mucho menor, cercana al <strong>-1,4%</strong>, lo que muestra que el comportamiento habitual de la serie no cambia de forma tan marcada.
-            </p>
-          </div>
-
-          <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
-            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
-              Resultado de las pruebas
-            </h3>
-
-            <p class="text-slate-600 leading-relaxed">
-              Las pruebas estadísticas no mostraron evidencia suficiente para afirmar que las primas sean significativamente diferentes entre los periodos con y sin Ley.
-            </p>
-
-            <p class="text-slate-600 leading-relaxed mt-3">
-              Esto indica que la Ley puede estar asociada con una menor dinámica, pero no explica por sí sola todo el comportamiento de la producción.
-            </p>
-          </div>
-
-          <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
-            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
-              Modelo seleccionado
-            </h3>
-
-            <p class="text-slate-600 leading-relaxed">
-              El modelo <strong>SARIMAX(2,0,2)(1,1,2)[12]</strong> presentó mejor desempeño que Random Forest en el conjunto de prueba.
-            </p>
-
-            <p class="text-slate-600 leading-relaxed mt-3">
-              Además, permite incorporar la Ley de Garantías directamente dentro del modelo, por lo que se selecciona como modelo principal para la predicción de 2026.
-            </p>
-          </div>
-
-        </div>
-
-        <div class="mt-10 bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
-          <p class="text-xl text-slate-700 leading-relaxed text-center">
-            En general, la Ley de Garantías sí muestra una señal sobre la producción de Fianzas, pero su efecto debe analizarse junto con la tendencia, la estacionalidad y el comportamiento histórico de la serie.
-          </p>
-        </div>
-
+        <p class="text-slate-600 leading-relaxed mt-3">
+          Sin embargo, al analizar la mediana, la diferencia fue mucho menor (-1,4%), lo que sugiere que la diferencia entre los periodos con y sin Ley no es tan fuerte como muestra el promedio, ya que algunos meses con valores atípicos influyen en el resultado.
+        </p>
       </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+        <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+          Evidencia estadística
+        </h3>
+
+        <p class="text-slate-600 leading-relaxed">
+          Las pruebas t de Student y Wilcoxon no encontraron evidencia suficiente para afirmar que existen diferencias significativas entre los periodos con y sin Ley de Garantías.
+        </p>
+
+        <p class="text-slate-600 leading-relaxed mt-3">
+          Esto indica que la producción de primas no depende únicamente de la Ley de Garantías, sino también de factores como la tendencia histórica y la estacionalidad mensual.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+        <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+          ¿Cuál fue el mejor modelo?
+        </h3>
+
+        <p class="text-slate-600 leading-relaxed">
+          El modelo SARIMAX presentó menores errores de predicción frente a Random Forest en las métricas RMSE, MAE y MAPE.
+        </p>
+
+        <p class="text-slate-600 leading-relaxed mt-3">
+          Además, permitió incorporar la Ley de Garantías directamente en la modelación, por lo que fue seleccionado para las proyecciones de 2026.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-santoto-orange">
+        <h3 class="text-2xl font-bold text-santoto-dark mb-4">
+          Pronóstico para 2026
+        </h3>
+
+        <p class="text-slate-600 leading-relaxed">
+          Las proyecciones muestran una disminución en la producción de primas durante parte del primer semestre, periodo en el que se encuentra vigente la Ley de Garantías.
+        </p>
+
+        <p class="text-slate-600 leading-relaxed mt-3">
+          Posteriormente, se observa una recuperación gradual durante el segundo semestre, con un mayor crecimiento hacia el cierre del año.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="mt-10 bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+      <p class="text-xl text-slate-700 leading-relaxed text-center">
+        Identificar los meses en los que la producción puede verse afectada por la Ley de Garantías permite a la compañía anticipar escenarios, fortalecer la planeación comercial y apoyar la toma de decisiones durante el ciclo electoral.
+      </p>
+    </div>
+
+  </div>
+  ```
+
     </div>
   </section>
+
 
   <!-- SLIDE 4 -->
-  <section id="slide-4" class="slide">
-    <div class="slide-content">
-      <div class="max-w-7xl mx-auto px-8 py-10">
-
-        <p class="text-2xl font-bold text-santoto-orange text-center">CONCLUSIONES</p>
-
-        <h2 class="text-4xl font-bold text-santoto-dark mt-2 text-center">
-          Conclusiones principales
-        </h2>
-
-        <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
-          A partir del análisis exploratorio, la comparación de modelos y las predicciones para 2026, se obtuvieron las siguientes conclusiones del proyecto.
-        </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-
-          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
-            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
-              La Ley muestra una señal, pero no actúa sola
-            </h3>
-
-            <p class="text-slate-600 leading-relaxed">
-              Los periodos de Ley de Garantías pueden estar relacionados con una menor producción promedio de primas.
-            </p>
-
-            <p class="text-slate-600 leading-relaxed mt-3">
-              Aun así, el comportamiento de la línea también depende de la tendencia histórica, la estacionalidad mensual y algunos meses atípicos.
-            </p>
-          </div>
-
-          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
-            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
-              SARIMAX representó mejor la serie
-            </h3>
-
-            <p class="text-slate-600 leading-relaxed">
-              El SARIMAX permitió modelar la tendencia, la estacionalidad y la variable de Ley de Garantías dentro de una misma estructura.
-            </p>
-
-            <p class="text-slate-600 leading-relaxed mt-3">
-              Por eso fue más adecuado que Random Forest para responder la pregunta principal del proyecto.
-            </p>
-          </div>
-
-          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
-            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
-              Predicción 2026
-            </h3>
-
-            <p class="text-slate-600 leading-relaxed">
-              Las proyecciones muestran una producción más moderada durante parte del primer semestre de 2026, especialmente en los meses cercanos al periodo de Ley de Garantías.
-            </p>
-
-            <p class="text-slate-600 leading-relaxed mt-3">
-              Luego se espera una recuperación gradual en el segundo semestre, con un aumento más fuerte hacia el cierre del año.
-            </p>
-          </div>
-
-          <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
-            <h3 class="text-2xl font-bold text-santoto-dark mb-4">
-              Utilidad para la compañía
-            </h3>
-
-            <p class="text-slate-600 leading-relaxed">
-              Los resultados pueden apoyar la planeación y el seguimiento comercial de la compañía durante el año electoral.
-            </p>
-
-            <p class="text-slate-600 leading-relaxed mt-3">
-              Esto permite anticipar posibles periodos de menor producción y facilitar la toma de decisiones durante el periodo electoral y postelectoral.
-            </p>
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- SLIDE 5 -->
-  <section id="slide-5" class="slide bg-santoto-dark text-white">
+  <section id="slide-4" class="slide bg-santoto-dark text-white">
     <div class="slide-content text-center">
       <div class="max-w-6xl mx-auto p-8">
 
