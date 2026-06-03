@@ -756,7 +756,7 @@
 
       </div>
 
-      <!-- Variables + parámetros + importancia -->
+      <!-- Variables + parámetros + funcionamiento -->
       <div class="grid grid-cols-1 lg:grid-cols-5 gap-7 mt-8 items-start">
 
         <!-- Tabla de variables -->
@@ -846,20 +846,85 @@
             </div>
           </div>
 
-          <div class="md:col-span-2 bg-white rounded-2xl shadow-lg p-5">
+          <!-- Flecha de conexión -->
+          <div class="md:col-span-2 flex justify-center -my-2">
+            <div class="text-4xl text-santoto-orange font-bold">↓</div>
+          </div>
+
+          <!-- Cómo funciona Random Forest -->
+          <div class="md:col-span-2 bg-white rounded-2xl shadow-lg p-5 border-l-4 border-santoto-orange">
             <h3 class="text-xl font-bold text-santoto-dark mb-4 text-center">
-              Importancia de variables
+              ¿Cómo funciona el Random Forest?
             </h3>
 
-            <img 
-              src="importancia_rf.png" 
-              alt="Importancia de variables Random Forest"
-              class="w-full rounded-xl shadow-md object-contain max-h-[350px]"
-            >
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-            <div class="mt-5 bg-slate-50 rounded-xl p-4 border-l-4 border-santoto-orange">
-              <p class="text-slate-600 leading-relaxed">
-                La variable más importante fue <strong>lag12</strong>, lo que muestra que el valor del mismo mes del año anterior tiene mucho peso en la predicción. En cambio, <strong>Ley_Garantias</strong> tuvo una importancia muy baja dentro de este modelo.
+              <!-- Paso 1 -->
+              <div class="bg-slate-50 rounded-xl p-4">
+                <h4 class="font-bold text-santoto-dark mb-2">
+                  Paso 1: se construyen varios árboles
+                </h4>
+                <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                  Cada árbol aprende reglas con muestras aleatorias de los datos.
+                </p>
+
+                <div class="bg-white rounded-xl p-4 border text-sm text-slate-700 leading-relaxed">
+                  <p class="text-center font-bold mb-2">¿lag12 &gt; 24.5?</p>
+
+                  <div class="grid grid-cols-2 gap-3 mt-2">
+                    <div class="text-center">
+                      <p class="font-bold text-santoto-orange">SÍ</p>
+                      <p class="mt-1">¿Anio &gt; 2020?</p>
+                      <div class="grid grid-cols-2 gap-2 mt-2">
+                        <span class="bg-green-50 border border-green-200 rounded-lg py-1">24.8</span>
+                        <span class="bg-orange-50 border border-orange-200 rounded-lg py-1">24.3</span>
+                      </div>
+                    </div>
+
+                    <div class="text-center">
+                      <p class="font-bold text-santoto-dark">NO</p>
+                      <p class="mt-1">¿Ley = 1?</p>
+                      <div class="grid grid-cols-2 gap-2 mt-2">
+                        <span class="bg-red-50 border border-red-200 rounded-lg py-1">24.1</span>
+                        <span class="bg-blue-50 border border-blue-200 rounded-lg py-1">24.4</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Paso 2 -->
+              <div class="bg-slate-50 rounded-xl p-4">
+                <h4 class="font-bold text-santoto-dark mb-2">
+                  Paso 2: se promedian las predicciones
+                </h4>
+                <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                  El bosque combina el resultado de muchos árboles para obtener una predicción final.
+                </p>
+
+                <div class="bg-white rounded-xl p-4 border text-slate-700">
+                  <div class="space-y-2 text-sm">
+                    <p><strong>Árbol 1</strong> → 24.3</p>
+                    <p><strong>Árbol 2</strong> → 24.6</p>
+                    <p><strong>Árbol 3</strong> → 24.4</p>
+                  </div>
+
+                  <div class="text-center text-2xl text-santoto-orange font-bold my-1">↓</div>
+
+                  <p class="text-center font-bold text-santoto-dark">
+                    Predicción final = 24.43
+                  </p>
+                  <p class="text-center text-xs text-slate-500 mt-1">
+                    Promedio de las predicciones
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="mt-4 bg-orange-50 rounded-xl p-3 border border-orange-100">
+              <p class="text-sm text-slate-600 leading-relaxed text-center">
+                Este esquema es ilustrativo: no representa un árbol exacto del modelo, sino la lógica general de Random Forest.
               </p>
             </div>
           </div>
@@ -886,6 +951,35 @@
       <p class="text-lg text-slate-600 mt-4 text-center max-w-5xl mx-auto">
         El modelo se evaluó con los datos de 2024 y 2025, comparando las primas reales frente a las predicciones generadas por Random Forest.
       </p>
+
+      <!-- Importancia de variables -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-7 mt-8 items-center">
+
+        <div class="lg:col-span-3 bg-white rounded-2xl shadow-lg p-5">
+          <h3 class="text-xl font-bold text-santoto-dark mb-4 text-center">
+            Importancia de variables
+          </h3>
+
+          <img 
+            src="importancia_rf.png" 
+            alt="Importancia de variables Random Forest"
+            class="w-full rounded-xl shadow-md object-contain max-h-[280px]"
+          >
+        </div>
+
+        <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6 border-l-4 border-santoto-orange">
+          <h3 class="text-xl font-bold text-santoto-dark mb-3">
+            Peso de los rezagos
+          </h3>
+          <p class="text-slate-600 leading-relaxed">
+            La variable más importante fue <strong>lag12</strong>, lo que muestra que el valor del mismo mes del año anterior tiene mucho peso en la predicción.
+          </p>
+          <p class="text-slate-600 leading-relaxed mt-3">
+            En cambio, <strong>Ley_Garantias</strong> tuvo una importancia muy baja dentro de este modelo.
+          </p>
+        </div>
+
+      </div>
 
       <!-- Métricas -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mt-8">
@@ -928,7 +1022,7 @@
           <img 
             src="pronostico_rf.png" 
             alt="Predicción Random Forest 2024-2025"
-            class="w-full rounded-xl shadow-md object-contain max-h-[390px]"
+            class="w-full rounded-xl shadow-md object-contain max-h-[330px]"
           >
         </div>
 
